@@ -19,7 +19,7 @@ class MyTextBox extends StatelessWidget {
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: const EdgeInsets.only(left: 15, bottom: 15, right: 16),
+      padding: const EdgeInsets.only(left: 15, bottom: 2, right: 16,top: 2),
       margin: const EdgeInsets.only(left: 20, right: 20,top: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

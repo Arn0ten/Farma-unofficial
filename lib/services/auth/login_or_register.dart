@@ -2,14 +2,14 @@ import 'package:agriplant/pages/login_page.dart';
 import 'package:agriplant/pages/register_page.dart';
 import 'package:flutter/material.dart';
 
-class LoginOrRegisterPage extends StatefulWidget {
-  const LoginOrRegisterPage({super.key});
+class LoginOrRegister extends StatefulWidget {
+  const LoginOrRegister({super.key});
 
   @override
-  State<LoginOrRegisterPage> createState() => _LoginOrRegisterPageState();
+  State<LoginOrRegister> createState() => _LoginOrRegisterState();
 }
 
-class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
+class _LoginOrRegisterState extends State<LoginOrRegister> {
   bool  showLoginPage = true;
 
   void togglePages() {
@@ -17,14 +17,11 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
       showLoginPage = !showLoginPage;
     });
   }
-
-
-
   @override
   Widget build(BuildContext context) {
     if (showLoginPage){
       return LogInPage(
-          onTap: togglePages,
+        onTap: togglePages,
       );
     }else {
       return RegisterPage(

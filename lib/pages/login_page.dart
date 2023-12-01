@@ -1,10 +1,12 @@
 
 import 'package:agriplant/components/my_button.dart';
 import 'package:agriplant/components/my_textfield.dart';
+import 'package:agriplant/services/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class LogInPage extends StatefulWidget {
   final Function()? onTap;
@@ -15,11 +17,11 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  // text editing controllers
+  /// text editing controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // sign user in method
+  /// sign user in method
   void signUserIn() async {
     showDialog(
       context: context,
@@ -29,7 +31,6 @@ class _LogInPageState extends State<LogInPage> {
         );
       },
     );
-
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
@@ -51,9 +52,9 @@ class _LogInPageState extends State<LogInPage> {
         ),
       );
     }
-
     Navigator.pop(context);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -129,36 +130,6 @@ class _LogInPageState extends State<LogInPage> {
                 ),
 
                 const SizedBox(height: 50),
-
-                // or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 100),
 
 
                 // not a member? register now

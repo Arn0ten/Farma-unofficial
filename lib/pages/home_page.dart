@@ -2,15 +2,14 @@ import 'package:agriplant/pages/cart_page.dart';
 import 'package:agriplant/pages/explore_page.dart';
 import 'package:agriplant/pages/profile_page.dart';
 import 'package:agriplant/pages/services_page.dart';
+import 'package:agriplant/widgets/drawer/drawer_content.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-
-import 'notification_page.dart';
+import 'message_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key});
@@ -31,33 +30,50 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> loadUserData() async {
-    final userDocument = await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(widget.user.email)
-        .get();
+    try {
+      final userDocument = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(widget.user.email)
+          .get();
 
-    setState(() {
-      userFullName = userDocument['fullName'];
-    });
+      if (userDocument.exists) {
+        final userData = userDocument.data() as Map<String, dynamic>?;
+
+        if (userData != null && userData.containsKey('fullName')) {
+          setState(() {
+            userFullName = userData['fullName'];
+          });
+        } else {
+          print('User data is missing full name.');
+        }
+      } else {
+        print('User document does not exist.');
+      }
+    } catch (error) {
+      print("Error loading user data: $error");
+    }
   }
+
   final pages = [
     const ExplorePage(),
     const ServicesPage(),
     const CartPage(),
-    const ProfilePage(),
   ];
   int currentPageIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-
-
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      const ExplorePage(),
+      const ServicesPage(),
+      const CartPage(),
+      ProfilePage(userFullName: userFullName),
+      // Pass userFullName to ProfilePage
+    ];
     return Scaffold(
       key: _scaffoldKey,
-      drawer: const Drawer(
-        backgroundColor: Colors.purple,
-      ),
+      drawer:  DrawerContent(userName: userFullName),
       appBar: AppBar(
         centerTitle: false,
         leading: IconButton.filledTonal(
@@ -66,11 +82,9 @@ class _HomePageState extends State<HomePage> {
           },
           icon: const Icon(Icons.menu),
         ),
-
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Text(
               "Hi, $userFullName!",
               style: GoogleFonts.bebasNeue(
@@ -78,8 +92,10 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 20,
               ),
             ),
-            Text("Enjoy our services",
-                style: Theme.of(context).textTheme.bodySmall)
+            Text(
+              "Enjoy our services",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ],
         ),
         actions: [
@@ -88,10 +104,11 @@ class _HomePageState extends State<HomePage> {
             child: IconButton.filledTonal(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationPage(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MessagePage(),
+                  ),
+                );
               },
               icon: badges.Badge(
                 badgeContent: const Text(

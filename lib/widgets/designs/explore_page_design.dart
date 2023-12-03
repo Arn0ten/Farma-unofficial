@@ -1,4 +1,3 @@
-
 import 'package:agriplant/data/products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -12,7 +11,9 @@ class ExplorePageDesign {
       Stream<List<Map<String, dynamic>>>? searchResultsStream,
       BuildContext context,
       Function searchUsers,
-      Function navigateToUserProfile) {
+      Function navigateToUserProfile,
+      String currentUserUid,
+      ) {
     return Scaffold(
       body: ListView(
         physics: const BouncingScrollPhysics(),
@@ -79,28 +80,24 @@ class ExplorePageDesign {
                     child: Text('No results found.'),
                   );
                 } else if (snapshot.hasData) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          navigateToUserProfile(context, snapshot.data![index]);
-                        },
-                        child: ListTile(
-                          title: Text(snapshot.data![index]['fullName']),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Email: ${snapshot.data![index]['email']}'),
-                              // Add other fields as needed
-                            ],
+                  return Container(
+                    color: Colors.green.shade50, // Set the background color here
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            navigateToUserProfile(context, snapshot.data![index]);
+                          },
+                          child: ListTile(
+                            title: Text(snapshot.data![index]['fullName']),
+                            // Add other ListTile customization if needed
                           ),
-                          // Add other ListTile customization if needed
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   );
                 } else {
                   return Container();

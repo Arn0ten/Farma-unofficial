@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 class UserTile extends StatelessWidget {
   final String fullName;
-  final VoidCallback onTap;
+  final VoidCallback onTap; // Change the function signature
 
   const UserTile({
     Key? key,

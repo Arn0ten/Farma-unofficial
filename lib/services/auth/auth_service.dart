@@ -3,25 +3,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthService with ChangeNotifier {
-  //Instance of Firebase
+  ///Instance of Firebase
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
 
   /// Sign in with email and password
   Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
     try {
       UserCredential userCredential =
-      await _firebaseAuth.signInWithEmailAndPassword(
+          await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       ///Firestore Collection if no data
       _firestore.collection('Farma Users').doc(userCredential.user!.uid).set({
         'uid': userCredential.user!.uid,
         'email': email,
-
-      },SetOptions(merge: true));
+      }, SetOptions(merge: true));
 
       notifyListeners(); // Notify listeners when authentication changes
       return userCredential;
@@ -33,17 +34,17 @@ class AuthService with ChangeNotifier {
 
   /// Sign up with email and password
   Future<UserCredential> signUpWithEmailAndPassword(
-      String email,
-      String password,
-      String fullName,
-      String address,
-      int age,
-      int contactNumber,
-      ) async {
+    String email,
+    String password,
+    String fullName,
+    String address,
+    int age,
+    int contactNumber,
+  ) async {
     try {
       /// Create a user in Firebase Authentication
       UserCredential userCredential =
-      await _firebaseAuth.createUserWithEmailAndPassword(
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -56,10 +57,7 @@ class AuthService with ChangeNotifier {
         'address': address,
         'age': age,
         'contactNumber': contactNumber,
-
       });
-
-
 
       /// Store user details in Firestore using the email as the document ID
       await FirebaseFirestore.instance.collection("Users").doc(email).set({
@@ -78,25 +76,27 @@ class AuthService with ChangeNotifier {
     }
   }
 
+
   /// Generate a search field from the user's full name
   String generateSearchField(String input) {
-    return input.toLowerCase().split(' ').join('');
+    return input.toLowerCase();
   }
 
   /// Sign out the user
   Future<void> signOut() async {
     return await FirebaseAuth.instance.signOut();
   }
+
   /// Fetch products from Firestore
   Future<List<Map<String, dynamic>>> fetchProducts() async {
     try {
       // Example: Fetch products from a 'Products' collection
       QuerySnapshot<Map<String, dynamic>> productsSnapshot =
-      await _firestore.collection('Products').get();
+          await _firestore.collection('Products').get();
 
       // Convert the products to a list of maps
       List<Map<String, dynamic>> products =
-      productsSnapshot.docs.map((doc) => doc.data()).toList();
+          productsSnapshot.docs.map((doc) => doc.data()).toList();
 
       return products;
     } catch (e) {
@@ -105,4 +105,35 @@ class AuthService with ChangeNotifier {
       return [];
     }
   }
+
+  /// Search users by full name
+  Future<List<Map<String, dynamic>>> searchUsers(String searchTerm) async {
+    try {
+      String currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? "";
+
+      if (searchTerm.isEmpty) {
+        return [];
+      } else {
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .where('fullName', isGreaterThanOrEqualTo: searchTerm)
+            .where('fullName', isLessThan: searchTerm + 'z')
+            .get();
+
+        List<Map<String, dynamic>> results =
+        snapshot.docs.map((doc) => doc.data()).toList();
+
+        // Filter out the current user
+        results.removeWhere((user) => user['uid'] == currentUserUid);
+        return results;
+      }
+    } catch (e) {
+      // Handle exceptions
+      print("Error searching users: $e");
+      return [];
+    }
+  }
+
+
 }

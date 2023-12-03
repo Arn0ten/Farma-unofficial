@@ -1,5 +1,6 @@
 import 'package:agriplant/pages/cart_page.dart';
 import 'package:agriplant/pages/explore_page.dart';
+import 'package:agriplant/pages/product_post_page.dart';
 import 'package:agriplant/pages/profile_page.dart';
 import 'package:agriplant/pages/services_page.dart';
 import 'package:agriplant/widgets/drawer/drawer_content.dart';
@@ -67,6 +68,7 @@ class _HomePageState extends State<HomePage> {
     final pages = [
       const ExplorePage(),
       const ServicesPage(),
+      const ProductPostPage(),
       const CartPage(),
       ProfilePage(userFullName: userFullName),
       // Pass userFullName to ProfilePage
@@ -133,9 +135,19 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         currentIndex: currentPageIndex,
         onTap: (index) {
-          setState(() {
-            currentPageIndex = index;
-          });
+          if (index == 5) {
+            // Handle the "Post" action
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductPostPage(),
+              ),
+            );
+          } else {
+            setState(() {
+              currentPageIndex = index;
+            });
+          }
         },
         items: const [
           BottomNavigationBarItem(
@@ -147,6 +159,13 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(IconlyLight.call),
             label: "Services",
             activeIcon: Icon(IconlyBold.call),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(IconlyLight.plus,
+              size: 40,),
+            label: "Post",
+            activeIcon: Icon(IconlyBold.plus,
+            size: 40),
           ),
           BottomNavigationBarItem(
             icon: Icon(IconlyLight.buy),

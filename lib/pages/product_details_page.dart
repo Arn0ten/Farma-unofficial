@@ -99,9 +99,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 size: 16,
                 color: Colors.yellow.shade800,
               ),
-              Text(
-                "${widget.product.rating} (192)",
-              ),
+              // Text(
+              //   // "${widget.product.rating} (192)",
+              // ),
               const Spacer(),
               SizedBox(
                 height: 30,

@@ -3,9 +3,7 @@ import 'package:agriplant/widgets/designs/explore_page_design.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../services/auth/auth_service.dart';
-
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -18,10 +16,10 @@ class _ExplorePageState extends State<ExplorePage> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> searchResults = [];
   Stream<List<Map<String, dynamic>>>? searchResultsStream;
-  final AuthService _authService = AuthService(); // Add this line to create an instance of AuthService
+  final AuthService _authService =
+      AuthService(); // Add this line to create an instance of AuthService
 
   String currentUserUid = "";
-
 
   void searchUsers(String searchTerm) {
     setState(() {
@@ -29,9 +27,8 @@ class _ExplorePageState extends State<ExplorePage> {
     });
   }
 
-
-
-  void navigateToUserProfile(BuildContext context, Map<String, dynamic> userData) {
+  void navigateToUserProfile(
+      BuildContext context, Map<String, dynamic> userData) {
     Navigator.push(
       context,
       MaterialPageRoute(

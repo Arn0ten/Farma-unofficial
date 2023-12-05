@@ -5,7 +5,7 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import '../pages/product_details_page.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.product});
+  const ProductCard({Key? key, required this.product}) : super(key: key);
 
   final Product product;
 
@@ -15,7 +15,8 @@ class ProductCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-              builder: (_) => ProductDetailsPage(product: product)),
+            builder: (_) => ProductDetailsPage(product: product),
+          ),
         );
       },
       child: Card(
@@ -35,7 +36,7 @@ class ProductCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(product.image),
+                  image: _getImageProvider(product.image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -69,11 +70,13 @@ class ProductCard extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                                text: "\₱${product.price}",
-                                style: Theme.of(context).textTheme.bodyLarge),
+                              text: "\₱${product.price}",
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
                             TextSpan(
-                                text: "/${product.unit}",
-                                style: Theme.of(context).textTheme.bodySmall),
+                              text: "/${product.unit}",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ],
                         ),
                       ),
@@ -96,5 +99,15 @@ class ProductCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  ImageProvider<Object> _getImageProvider(String imagePath) {
+    if (imagePath.startsWith('http')) {
+      // Assume it's a network image
+      return NetworkImage(imagePath);
+    } else {
+      // Assume it's a local asset
+      return AssetImage(imagePath);
+    }
   }
 }

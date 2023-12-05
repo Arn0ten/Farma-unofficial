@@ -66,10 +66,9 @@ class _ProductPostPageState extends State<ProductPostPage> {
       image: _imagePath,
       price: double.parse(_priceController.text),
       unit: _unitController.text,
-      rating: 0.0, // Set the default rating or update as needed
     );
 
-    // Save the 'newProduct' data to the database or perform necessary actions
-    // You can use Firebase, or any other database of your choice.
+    /// Save the 'newProduct' data to the database or perform necessary actions
+    /// You can use Firebase, or any other database of your choice.
   }
 }

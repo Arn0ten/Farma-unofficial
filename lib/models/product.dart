@@ -4,7 +4,7 @@ class Product {
   final String image;
   final double price;
   final String unit;
-  final double rating;
+
 
   const Product({
     required this.name,
@@ -12,6 +12,6 @@ class Product {
     required this.image,
     required this.price,
     required this.unit,
-    required this.rating,
+
   });
 }

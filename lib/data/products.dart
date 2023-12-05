@@ -8,7 +8,7 @@ List<Product> products = [
     image: 'assets/karabaw.jpg',
     price: 377.00,
     unit: 'day(s)',
-    rating: 4.35,
+    // rating: 4.35,
   ),
   const Product(
     name: "Kalabasa",
@@ -17,7 +17,7 @@ List<Product> products = [
     image: 'assets/kalabasa.jpg',
     price: 5,
     unit: 'kg',
-    rating: 3.86,
+    // rating: 3.86,
   ),
   const Product(
     name: "Pechay",
@@ -26,7 +26,7 @@ List<Product> products = [
     image: 'assets/pechay.jpeg',
     price: 7,
     unit: 'piece',
-    rating: 4.18,
+    // rating: 4.18,
   ),
   const Product(
     name: "Vegetable Seeds",
@@ -35,7 +35,7 @@ List<Product> products = [
     image: 'assets/veg seeds.jpg',
     price: 57,
     unit: 'kg',
-    rating: 5.0,
+    // rating: 5.0,
   ),
   const Product(
     name: "Pick axe",
@@ -44,7 +44,7 @@ List<Product> products = [
     image: 'assets/pick axe.jpg',
     price: 140,
     unit: 'piece',
-    rating: 5.0,
+    // rating: 5.0,
   ),
   const Product(
     name: "Eggplants",
@@ -53,6 +53,6 @@ List<Product> products = [
     image: 'assets/talongs.JPG',
     price: 30,
     unit: 'kg',
-    rating: 3.22,
+    // rating: 3.22,
   ),
 ];

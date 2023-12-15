@@ -1,12 +1,15 @@
-import 'package:agriplant/data/products.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
-
+import '../components/message_button.dart';
 import '../models/product.dart';
+import '../widgets/designs/product_details_design.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-  const ProductDetailsPage({super.key, required this.product});
+  const ProductDetailsPage({
+    Key? key,
+    required this.product,
+  }) : super(key: key);
 
   final Product product;
 
@@ -43,163 +46,23 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(IconlyLight.bookmark),
+            icon: const Icon(Icons.bookmark),
           ),
         ],
       ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        children: [
-          Container(
-            height: 250,
-            width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(widget.product.image),
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          Text(
-            widget.product.name,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Available in stock",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                        text: "\₱${widget.product.price}",
-                        style: Theme.of(context).textTheme.titleLarge),
-                    TextSpan(
-                        text: "/${widget.product.unit}",
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ],
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Icon(
-                Icons.star,
-                size: 16,
-                color: Colors.yellow.shade800,
-              ),
-              // Text(
-              //   // "${widget.product.rating} (192)",
-              // ),
-              const Spacer(),
-              SizedBox(
-                height: 30,
-                width: 30,
-                child: IconButton.filledTonal(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {},
-                  iconSize: 18,
-                  icon: const Icon(Icons.remove),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(
-                  "2 ${widget.product.unit}",
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-                width: 30,
-                child: IconButton.filledTonal(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {},
-                  iconSize: 18,
-                  icon: const Icon(Icons.add),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Text("Description",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 5),
-          RichText(
-            text: TextSpan(
-              style: Theme.of(context).textTheme.bodyMedium,
-              children: [
-                TextSpan(
-                  text: showMore
-                      ? widget.product.description
-                      : '${widget.product.description.substring(0, widget.product.description.length - 100)}...',
-                ),
-                TextSpan(
-                  recognizer: readMoreGestureRecognizer,
-                  text: showMore ? " Read less" : " Read more",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            "Similar Products",
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 90,
-            child: ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return Container(
-                  height: 90,
-                  width: 80,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(products[index].image),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                );
-              },
-              separatorBuilder: (__, _) => const SizedBox(
-                width: 10,
-              ),
-              itemCount: products.length,
-            ),
-          ),
-          const SizedBox(height: 20),
-          FilledButton.icon(
-              onPressed: () {},
-              icon: const Icon(IconlyLight.bag2),
-              label: const Text("Add to cart"))
-        ],
+      body: ProductDetailsDesign(
+        product: widget.product,
+        showMore: showMore,
+        readMoreGestureRecognizer: readMoreGestureRecognizer,
+        messageButton: MessageButton(
+          // Check if postedByUser is of type User before accessing its properties
+          receiverUserEmail: widget.product.postedByUser is User
+              ? (widget.product.postedByUser as User).email ?? 'Unknown Email'
+              : 'Unknown Email',
+          receiverUserId: widget.product.postedByUser is User
+              ? (widget.product.postedByUser as User).uid ?? 'Unknown UID'
+              : 'Unknown UID',
+        ),
       ),
     );
   }

@@ -1,11 +1,10 @@
-import 'package:agriplant/models/order.dart';
 import 'package:flutter/material.dart';
+import 'package:agriplant/models/order.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-
 import 'order_product.dart';
 
 class OrderItem extends StatelessWidget {
-  const OrderItem({super.key, required this.order, this.visibleProducts = 2});
+  const OrderItem({Key? key, required this.order, this.visibleProducts = 2});
 
   final Order order;
   final int visibleProducts;

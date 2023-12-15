@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   final pages = [
-    const ExplorePage(),
+     ExplorePage(),
     const ServicesPage(),
     const CartPage(),
   ];
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      const ExplorePage(),
+       ExplorePage(),
       const ServicesPage(),
       const ProductPostPage(),
       const CartPage(),
@@ -74,6 +74,7 @@ class _HomePageState extends State<HomePage> {
       // Pass userFullName to ProfilePage
     ];
     return Scaffold(
+
       key: _scaffoldKey,
       drawer:  DrawerContent(userName: userFullName),
       appBar: AppBar(

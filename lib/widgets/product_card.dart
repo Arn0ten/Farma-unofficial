@@ -1,7 +1,7 @@
-import 'package:agriplant/models/product.dart';
+// Import necessary packages
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-
+import '../models/product.dart';
 import '../pages/product_details_page.dart';
 
 class ProductCard extends StatelessWidget {
@@ -61,37 +61,53 @@ class ProductCard extends StatelessWidget {
                     child: Text(
                       product.name,
                       style: Theme.of(context).textTheme.bodyLarge,
+                      maxLines: 2, // Limit the number of lines for the product name
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "\₱${product.price}",
-                              style: Theme.of(context).textTheme.bodyLarge,
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width - 32,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "₱${product.price.toStringAsFixed(2)}", // Format as a string with 2 decimal places
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                  TextSpan(
+                                    text: "/",
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                  TextSpan(
+                                    text: product.unit,
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ],
+                              ),
                             ),
-                            TextSpan(
-                              text: "/${product.unit}",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: IconButton.filled(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {},
-                          iconSize: 18,
-                          icon: const Icon(Icons.add),
-                        ),
-                      )
-                    ],
-                  )
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: IconButton.filled(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {},
+                            iconSize: 18,
+                            icon: const Icon(Icons.add),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             )
@@ -105,9 +121,14 @@ class ProductCard extends StatelessWidget {
     if (imagePath.startsWith('http')) {
       // Assume it's a network image
       return NetworkImage(imagePath);
-    } else {
+    } else if (imagePath.startsWith('assets/')) {
       // Assume it's a local asset
       return AssetImage(imagePath);
+    } else {
+      // Assuming imagePath is a local cache path
+      // Modify this part based on your actual path structure
+      String relativePath = imagePath.split('/cache/').last;
+      return AssetImage(relativePath);
     }
   }
 }

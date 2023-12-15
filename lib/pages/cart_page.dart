@@ -1,67 +1,71 @@
-import 'package:agriplant/data/products.dart';
-import 'package:agriplant/pages/checkout_page.dart';
-import 'package:agriplant/widgets/cart_item.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:agriplant/widgets/cart_item.dart';
+import 'package:flutter/material.dart';
+import '../services/order/order_service.dart';
+import '../widgets/order_item.dart';
+import '../models/product.dart'; // Import the Product class
+import '../models/order.dart' as LocalOrder; // Import your local Order class and use an alias
 
 class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+  const CartPage({Key? key}) : super(key: key);
 
   @override
-  State<CartPage> createState() => _CartPageState();
+  _CartPageState createState() => _CartPageState();
 }
 
 class _CartPageState extends State<CartPage> {
-  final cartItems = products.take(4).toList();
+  late Stream<List<LocalOrder.Order>> ordersStream; // Use the alias for the local Order class
+
+  @override
+  void initState() {
+    super.initState();
+    ordersStream = OrderService().getOrdersStream();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final total =
-        cartItems.map((cartItem) => cartItem.price).reduce((value, element) => value + element).toStringAsFixed(2);
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            ...List.generate(
-              cartItems.length,
-              (index) {
-                final cartItem = cartItems[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: CartItem(cartItem: cartItem),
-                );
-              },
-            ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Total (${cartItems.length} items)"),
-                Text(
-                  "\₱$total",
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                )
-              ],
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context) => const CheckOutPage()));
-                },
-                label: const Text("Proceed to Checkout"),
-                icon: const Icon(IconlyBold.arrowRight),
+      body: StreamBuilder<List<LocalOrder.Order>>( // Use the alias for the local Order class
+        stream: ordersStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text('No orders found.'),
+            );
+          } else {
+            final List<LocalOrder.Order> orders = snapshot.data!; // Use the alias for the local Order class
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  ...List.generate(
+                    orders.length,
+                        (index) {
+                      final LocalOrder.Order order = orders[index]; // Use the alias for the local Order class
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: OrderItem(order: order),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 15),
+                  // Other UI components
+                ],
               ),
-            )
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }

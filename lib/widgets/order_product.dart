@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
-import '../models/order.dart';
+import 'package:agriplant/models/order.dart';
 import '../models/product.dart';
 import '../pages/order_details_page.dart';
 
+
 class OrderProduct extends StatelessWidget {
   const OrderProduct({
-    super.key,
+    Key? key,
     required this.order,
     required this.product,
   });

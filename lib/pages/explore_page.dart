@@ -1,9 +1,7 @@
-import 'package:agriplant/pages/users_profile_page.dart';
-import 'package:agriplant/widgets/designs/explore_page_design.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../services/auth/auth_service.dart';
+import '../models/product.dart';
+import '../services/product/product_service.dart';
+import '../widgets/designs/explore_page_design.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
@@ -12,46 +10,25 @@ class ExplorePage extends StatefulWidget {
   _ExplorePageState createState() => _ExplorePageState();
 }
 
+// _ExplorePageState in explore_page.dart
 class _ExplorePageState extends State<ExplorePage> {
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, dynamic>> searchResults = [];
-  Stream<List<Map<String, dynamic>>>? searchResultsStream;
-  final AuthService _authService =
-      AuthService(); // Add this line to create an instance of AuthService
+  Stream<List<Product>>? searchResultsStream;
 
-  String currentUserUid = "";
-
-  void searchUsers(String searchTerm) {
-    setState(() {
-      searchResultsStream = _authService.searchUsers(searchTerm).asStream();
-    });
-  }
-
-  void navigateToUserProfile(
-      BuildContext context, Map<String, dynamic> userData) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => UserProfilePage(user: userData),
-      ),
-    );
+  @override
+  void initState() {
+    super.initState();
+    // Fetch products stream when the page is initialized
+    searchResultsStream = ProductService().getProductsStream();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Initialize currentUserUid if not already initialized
-    if (currentUserUid.isEmpty) {
-      currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? "";
-    }
-
     return ExplorePageDesign.buildExplorePage(
       _searchController,
-      searchResults,
+      [],
       searchResultsStream,
       context,
-      searchUsers,
-      navigateToUserProfile,
-      currentUserUid, // Pass the currentUserUid
     );
   }
 }

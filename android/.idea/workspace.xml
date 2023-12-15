@@ -4,22 +4,44 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5c975ff-1edd-4608-9a97-ff6a550fcf29" name="Changes" comment="">
+    <list default="true" id="13aee243-e0df-49b5-845e-5acebe3dd400" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../lib/services/order/order_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/widgets/designs/product_details_design.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/../.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/agriplant.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/agriplant.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/components/user_tile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/components/user_tile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/data/orders.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/data/products.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/models/order.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/models/order.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/models/product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/models/product.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/pages/cart_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/pages/cart_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../lib/pages/explore_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/pages/explore_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/services/auth/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/services/auth/auth_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/pages/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/pages/home_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/pages/order_details_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/pages/order_details_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/pages/orders_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/pages/orders_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/pages/product_details_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/pages/product_details_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/pages/product_post_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/pages/product_post_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/services/product/product_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/services/product/product_service.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../lib/widgets/designs/explore_page_design.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/widgets/designs/explore_page_design.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/widgets/order_item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/widgets/order_item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/widgets/order_product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/widgets/order_product.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/widgets/product_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/widgets/product_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\Arn\.android\avd\Pixel_5_API_29.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\Arn\.android\avd\4_WVGA_Nexus_S_API_29.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -28,7 +50,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectId" id="2Ytbcraf8RjCmYrk3yZ6Px7jPbu" />
+  <component name="ProjectId" id="2ZNIKvR5JgnTAOQXGwdm4EAfaMP" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -40,7 +62,6 @@
     "RunOnceActivity.cidr.known.project.marker": "true",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "last_opened_file_path": "C:/src/farma",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
@@ -115,11 +136,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="b5c975ff-1edd-4608-9a97-ff6a550fcf29" name="Changes" comment="" />
-      <created>1701347907472</created>
+      <changelist id="13aee243-e0df-49b5-845e-5acebe3dd400" name="Changes" comment="" />
+      <created>1702256050855</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1701347907472</updated>
+      <updated>1702256050855</updated>
     </task>
     <servers />
   </component>

@@ -1,5 +1,5 @@
-
-
+import 'package:agriplant/pages/explore_page.dart';
+import 'package:agriplant/pages/home_page.dart';
 import 'package:agriplant/services/auth/auth_gate.dart';
 import 'package:agriplant/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';

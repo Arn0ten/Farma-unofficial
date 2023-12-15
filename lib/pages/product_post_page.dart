@@ -1,10 +1,15 @@
+// product_post_page.dart
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:agriplant/models/product.dart';
 import '../components/my_button.dart';
 import '../components/my_textfield.dart';
+import '../models/product.dart';
+import '../services/product/product_service.dart';
 import '../widgets/designs/product_post_design.dart';
+import 'explore_page.dart';
+import 'home_page.dart';
 
 
 class ProductPostPage extends StatefulWidget {
@@ -21,7 +26,6 @@ class _ProductPostPageState extends State<ProductPostPage> {
   final TextEditingController _unitController = TextEditingController();
 
   String _imagePath = '';
-
   final ImagePicker _imagePicker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -34,6 +38,97 @@ class _ProductPostPageState extends State<ProductPostPage> {
     }
   }
 
+  bool _validateForm(BuildContext context) {
+    if (_nameController.text.isEmpty) {
+      _showSnackBar(context, 'Name field cannot be empty');
+      return false;
+    }
+
+    if (_descriptionController.text.isEmpty) {
+      _showSnackBar(context, 'Description field cannot be empty');
+      return false;
+    }
+
+    if (_priceController.text.isEmpty || double.tryParse(_priceController.text) == null) {
+      _showSnackBar(context, 'Invalid price');
+      return false;
+    }
+
+    if (_unitController.text.isEmpty) {
+      _showSnackBar(context, 'Unit field cannot be empty');
+      return false;
+    }
+
+    if (_imagePath.isEmpty) {
+      _showSnackBar(context, 'Please select an image');
+      return false;
+    }
+
+    // All validations passed
+    return true;
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+
+  void _validateAndSaveProduct() {
+    if (_validateForm(context)) {
+      _saveProduct();
+      // Navigate to the Explore page after successfully posting a product
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
+    }
+  }
+
+
+  void _saveProduct() async {
+    // Upload the image and get the download URL
+    final String imageUrl = await ProductService().uploadImage(File(_imagePath));
+
+    Product newProduct = Product(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: _nameController.text,
+      description: _descriptionController.text,
+      image: imageUrl, // Use the uploaded image URL
+      price: double.parse(_priceController.text),
+      unit: _unitController.text,
+    );
+
+    try {
+      await ProductService().addProduct(newProduct);
+      // Clear the form fields after successful submission
+      _nameController.clear();
+      _descriptionController.clear();
+      _priceController.clear();
+      _unitController.clear();
+      _imagePath = '';
+      setState(() {});
+    } catch (e) {
+      // Handle error
+      print('Failed to add product: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    _unitController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ProductPostPageDesign(
@@ -43,32 +138,7 @@ class _ProductPostPageState extends State<ProductPostPage> {
       unitController: _unitController,
       imagePath: _imagePath,
       pickImage: _pickImage,
-      postProduct: _validateAndSaveProduct, // Call your validation method here
+      postProduct: _validateAndSaveProduct,
     );
-  }
-
-  bool _validateForm() {
-    // Implement your validation logic here
-    // Return true if the form is valid, otherwise false
-    return true;
-  }
-
-  void _validateAndSaveProduct() {
-    if (_validateForm()) {
-      _saveProduct();
-    }
-  }
-
-  void _saveProduct() {
-    Product newProduct = Product(
-      name: _nameController.text,
-      description: _descriptionController.text,
-      image: _imagePath,
-      price: double.parse(_priceController.text),
-      unit: _unitController.text,
-    );
-
-    /// Save the 'newProduct' data to the database or perform necessary actions
-    /// You can use Firebase, or any other database of your choice.
   }
 }

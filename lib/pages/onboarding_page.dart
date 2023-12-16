@@ -1,45 +1,91 @@
-import 'package:agriplant/pages/home_page.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+import 'package:agriplant/services/auth/auth_gate.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 
-class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+
+    _animationController.forward();
+
+    Timer(
+      Duration(seconds: 10),
+          () {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => AuthGate(), // aha mo navigate ig human sa loading...
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        minimum: const EdgeInsets.all(20),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 380),
-                child: Image.asset('assets/onboarding.png'),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ScaleTransition(
+              scale: _animation,
+              child: Image.asset(
+                'assets/logo.png',
+                width: 200,
+                height: 200,
               ),
-              const Spacer(),
-              Text('Welcome to FarMa',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-              const Padding(
-                padding: EdgeInsets.only(top: 30, bottom: 30),
-                child: Text(
-                  "Get your agriculture products from the comfort of your home. You're just a few clicks away from your favorite products.",
-                  textAlign: TextAlign.center,
-                ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'FarMa',
+              style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              /**/
-              FilledButton.tonalIcon(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (context) =>   HomePage()));
-                },
-                icon: const Icon(IconlyLight.login),
-                label: const Text("Continue"),
-              )
-            ],
-          ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Loading...',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 20),
+            CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          ],
         ),
       ),
     );

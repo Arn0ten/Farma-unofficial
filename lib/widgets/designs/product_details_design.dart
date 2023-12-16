@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-
 import '../../components/message_button.dart';
 import '../../models/product.dart';
 import '../../models/user.dart';
@@ -40,13 +39,7 @@ class ProductDetailsDesign extends StatefulWidget {
 class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
   int quantity = 1; // Default quantity
 
-
   void _handleMessageButtonPress() {
-    // Implement the logic to navigate to the messaging or contact screen
-    // For example, you can use Navigator.push to navigate to a messaging page
-    // where the user can send a message regarding the product.
-
-    // Check if the receiverUserEmail and receiverUserId are not empty or null
     if (widget.receiverUserEmail.isNotEmpty && widget.receiverUserId.isNotEmpty) {
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -57,7 +50,6 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
         ),
       );
     } else {
-      // Handle the case when receiverUserEmail or receiverUserId is empty
       print("Cannot open chat. Missing user details.");
     }
   }
@@ -68,6 +60,7 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(16),
       children: [
+        // Product Image
         Container(
           height: 250,
           width: double.infinity,
@@ -80,13 +73,17 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+
+        // Product Name
         Text(
           widget.product.name,
           style: Theme.of(context).textTheme.headline5!.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.green, // You can change the color as per your preference
+            color: Colors.green,
           ),
         ),
+
+        // Posted by User
         Text(
           "Posted by: ${widget.product.postedByUser.email}",
           style: Theme.of(context).textTheme.subtitle1!.copyWith(
@@ -94,6 +91,8 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
           ),
         ),
         const SizedBox(height: 5),
+
+        // Stock and Price
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -103,7 +102,6 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
-
             RichText(
               text: TextSpan(
                 children: [
@@ -120,17 +118,17 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
             )
           ],
         ),
+
+        // Description Section
         Text(
-          "Discription:",
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(fontWeight: FontWeight.bold),
+          "Description:",
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        // ... other details
         Container(
           decoration: BoxDecoration(
-            color: Colors.grey[200], // Change the color as per your preference
+            color: Colors.grey[200],
             borderRadius: BorderRadius.circular(10),
           ),
           padding: const EdgeInsets.all(10),
@@ -157,7 +155,10 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
             ),
           ),
         ),
+
         const SizedBox(height: 20),
+
+        // Quantity Section
         Row(
           children: [
             Text(
@@ -168,9 +169,7 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             SizedBox(
-
               child: Row(
-
                 children: [
                   IconButton(
                     icon: const Icon(Icons.remove),
@@ -189,7 +188,6 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
                   IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: () {
-                      // You can set a maximum limit if needed
                       setState(() {
                         quantity++;
                       });
@@ -200,6 +198,8 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
             ),
           ],
         ),
+
+        // Similar Products Section
         Text(
           "Similar Products: ",
           style: Theme.of(context)
@@ -209,16 +209,12 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
         ),
         const SizedBox(height: 10),
         Container(
-
-          // Adjust the height accordingly
           height: 200,
           child: FutureBuilder<List<Product>>(
             future: ProductService().fetchSimilarProducts(widget.product),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
-                  height: 20,
-                  width: 20,
+                return Center(
                   child: CircularProgressIndicator(strokeWidth: 2.0),
                 );
               } else if (snapshot.hasError) {
@@ -234,11 +230,11 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
 
                     return GestureDetector(
                       onTap: () {
-                        // Navigate to the details page when a similar product is tapped
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProductDetailsPage(product: similarProduct),
+                            builder: (context) =>
+                                ProductDetailsPage(product: similarProduct),
                           ),
                         );
                       },
@@ -247,9 +243,10 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
                           radius: 30,
                           backgroundImage: NetworkImage(similarProduct.image),
                         ),
-                        title: Text(similarProduct.name, style: TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('Price: \₱${similarProduct.price.toStringAsFixed(2)}'),
-                        // Add more details or customize the UI as needed
+                        title: Text(similarProduct.name,
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text(
+                            'Price: \₱${similarProduct.price.toStringAsFixed(2)}'),
                       ),
                     );
                   },
@@ -258,31 +255,31 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
             },
           ),
         ),
+
         const SizedBox(height: 20),
-        // Display the MessageButton with the user who posted the product
-        // MessageButton widget with the handlePress callback
+
+        // Message Button Section
         MessageButton(
           receiverUserEmail: widget.receiverUserEmail,
           receiverUserId: widget.receiverUserId,
         ),
         const SizedBox(height: 20),
-        FilledButton.icon(
-          onPressed: widget.addingToCart ? null : () {
-            widget.addToCart();
 
+        // Add to Cart Button
+        FilledButton.icon(
+          onPressed: widget.addingToCart
+              ? null
+              : () {
+            widget.addToCart();
           },
           icon: const Icon(IconlyLight.bag2),
           label: widget.addingToCart
               ? const CircularProgressIndicator()
-              : const Text("Add to cart"),
+              : const Text("Add to Cart"),
         ),
+
         const SizedBox(height: 20),
-
-
-        // ...
-
       ],
     );
   }
-
 }

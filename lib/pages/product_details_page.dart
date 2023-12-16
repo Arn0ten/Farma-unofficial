@@ -1,9 +1,8 @@
-// product_details_page.dart
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/cart/cart_service.dart';
+
 import '../widgets/designs/product_details_design.dart';
 import 'cart_page.dart';
 
@@ -28,8 +27,34 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     // Add the product to the cart
     CartService().addToCart(widget.product);
 
-    // Navigate to the cart page after adding the product
+    // Set state to trigger UI changes
+    setState(() {
+      addingToCart = true;
+    });
 
+    // Simulate a delay to show the loading indicator
+    Future.delayed(const Duration(seconds: 2), () {
+      // Reset addingToCart after the delay
+      setState(() {
+        addingToCart = false;
+        // Display a snackbar message when the product is added to the cart
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Product added to cart'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+    });
+  }
+
+  void toggleBookmark() {
+    // TODO: Implement the logic to toggle the bookmark status
+    // You can use the BookmarkService to handle bookmarking/unbookmarking
+    // Example: BookmarkService().toggleBookmark(widget.product);
+
+    // Placeholder comment, replace with your logic
+    print('Bookmark icon pressed');
   }
 
   @override
@@ -49,14 +74,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     readMoreGestureRecognizer.dispose();
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Details"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: toggleBookmark,
             icon: const Icon(Icons.bookmark),
           ),
         ],
@@ -67,6 +91,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         readMoreGestureRecognizer: readMoreGestureRecognizer,
         addToCart: addToCart,
         addingToCart: addingToCart,
+
+        receiverUserEmail: widget.product.postedByUser.email,
+        receiverUserId: widget.product.postedByUser.uid,
       ),
     );
   }

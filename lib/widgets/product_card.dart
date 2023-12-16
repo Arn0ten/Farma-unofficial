@@ -4,18 +4,27 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import '../models/product.dart';
 import '../pages/product_details_page.dart';
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+class ProductCard extends StatefulWidget {
+
+
+  const ProductCard({
+
+    Key? key, required this.product}) : super(key: key);
 
   final Product product;
 
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => ProductDetailsPage(product: product),
+            builder: (_) => ProductDetailsPage(product: widget.product),
           ),
         );
       },
@@ -36,7 +45,7 @@ class ProductCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: _getImageProvider(product.image),
+                  image: _getImageProvider(widget.product.image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -59,7 +68,7 @@ class ProductCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
-                      product.name,
+                      widget.product.name,
                       style: Theme.of(context).textTheme.bodyLarge,
                       maxLines: 2, // Limit the number of lines for the product name
                       overflow: TextOverflow.ellipsis,
@@ -79,7 +88,7 @@ class ProductCard extends StatelessWidget {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "₱${product.price.toStringAsFixed(2)}", // Format as a string with 2 decimal places
+                                    text: "₱${widget.product.price.toStringAsFixed(2)}", // Format as a string with 2 decimal places
                                     style: Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   TextSpan(
@@ -87,7 +96,7 @@ class ProductCard extends StatelessWidget {
                                     style: Theme.of(context).textTheme.bodySmall,
                                   ),
                                   TextSpan(
-                                    text: product.unit,
+                                    text: widget.product.unit,
                                     style: Theme.of(context).textTheme.bodySmall,
                                   ),
                                 ],
@@ -100,7 +109,9 @@ class ProductCard extends StatelessWidget {
                           height: 30,
                           child: IconButton.filled(
                             padding: EdgeInsets.zero,
-                            onPressed: () {},
+                            onPressed: () {
+
+                            },
                             iconSize: 18,
                             icon: const Icon(Icons.add),
                           ),

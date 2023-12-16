@@ -1,6 +1,7 @@
 // product_post_page.dart
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../components/my_button.dart';
@@ -91,28 +92,47 @@ class _ProductPostPageState extends State<ProductPostPage> {
   }
 
 
+  // Inside _ProductPostPageState class
   void _saveProduct() async {
-    // Upload the image and get the download URL
-    final String imageUrl = await ProductService().uploadImage(File(_imagePath));
-
-    Product newProduct = Product(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: _nameController.text,
-      description: _descriptionController.text,
-      image: imageUrl, // Use the uploaded image URL
-      price: double.parse(_priceController.text),
-      unit: _unitController.text,
-    );
-
     try {
-      await ProductService().addProduct(newProduct);
-      // Clear the form fields after successful submission
-      _nameController.clear();
-      _descriptionController.clear();
-      _priceController.clear();
-      _unitController.clear();
-      _imagePath = '';
-      setState(() {});
+      // Upload the image and get the download URL
+      final String imageUrl = await ProductService().uploadImage(File(_imagePath));
+
+      // Get the current user from Firebase Authentication
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        // Create a PostedByUser instance
+        PostedByUser postedByUser = PostedByUser(
+          uid: currentUser.uid,
+          email: currentUser.email ?? '',
+        );
+
+        // Create a Product instance with the necessary information
+        Product newProduct = Product(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: _nameController.text,
+          description: _descriptionController.text,
+          image: imageUrl,
+          price: double.parse(_priceController.text),
+          unit: _unitController.text,
+          postedByUser: postedByUser,
+        );
+
+        // Add the product to the database
+        await ProductService().addProduct(newProduct);
+
+        // Clear the form fields after successful submission
+        _nameController.clear();
+        _descriptionController.clear();
+        _priceController.clear();
+        _unitController.clear();
+        _imagePath = '';
+        setState(() {});
+      } else {
+        // Handle the case when the user is not authenticated
+        print('User is not authenticated.');
+      }
     } catch (e) {
       // Handle error
       print('Failed to add product: $e');

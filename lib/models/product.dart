@@ -6,6 +6,8 @@ class Product {
   final double price;
   final String unit;
 
+  // Include user-related properties
+  final PostedByUser postedByUser;
 
   Product({
     required this.id,
@@ -14,7 +16,7 @@ class Product {
     required this.image,
     required this.price,
     required this.unit,
-
+    required this.postedByUser,
   });
 
   factory Product.fromMap(Map<String, dynamic> map) {
@@ -25,6 +27,7 @@ class Product {
       image: map['image'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,
       unit: map['unit'] ?? '',
+      postedByUser: PostedByUser.fromMap(map['postedByUser']),
     );
   }
 
@@ -36,7 +39,31 @@ class Product {
       'price': price,
       'image': image,
       'unit': unit,
+      'postedByUser': postedByUser.toMap(),
+    };
+  }
+}
 
+class PostedByUser {
+  final String uid;
+  final String email;
+
+  PostedByUser({
+    required this.uid,
+    required this.email,
+  });
+
+  factory PostedByUser.fromMap(Map<String, dynamic> map) {
+    return PostedByUser(
+      uid: map['uid'] ?? '',
+      email: map['email'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'email': email,
     };
   }
 }

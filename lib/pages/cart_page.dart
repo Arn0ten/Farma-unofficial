@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:agriplant/widgets/cart_item.dart';
-import 'package:flutter/material.dart';
 import '../services/cart/cart_service.dart';
 import '../services/order/order_service.dart';
 import '../widgets/order_item.dart';
@@ -50,24 +47,53 @@ class _CartPageState extends State<CartPage> {
               padding: const EdgeInsets.all(16),
               children: [
                 // Display historical orders
-                Column(
-                  children: List.generate(
-                    orders.length,
-                        (index) {
-                      final LocalOrder.Order order = orders[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: OrderItem(order: order),
-                      );
-                    },
+                if (orders.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Historical Orders',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ...orders.map(
+                            (order) => Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: OrderItem(order: order),
+                        ),
+                      ),
+                      const Divider(),
+                    ],
                   ),
-                ),
                 // Display cart items using CartItem widget
-                ...cartItems.map(
-                      (product) => CartItem(cartItem: product),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Current Cart',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ...cartItems.map(
+                          (product) => CartItem(cartItem: product),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 15),
-                // Other UI components
+                // Checkout Button
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle the checkout logic here
+                    // You can navigate to a checkout page or perform any other action
+                  },
+                  child: Text('Checkout'),
+                ),
               ],
             );
           }

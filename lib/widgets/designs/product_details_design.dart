@@ -7,6 +7,7 @@ import '../../components/message_button.dart';
 import '../../models/product.dart';
 import '../../models/user.dart';
 import '../../pages/cart_page.dart';
+import '../../pages/product_details_page.dart';
 import '../../services/product/product_service.dart';
 import '../similar_products.dart';
 
@@ -17,8 +18,8 @@ class ProductDetailsDesign extends StatefulWidget {
   final VoidCallback addToCart;
   final bool addingToCart;
 
-
-
+  final String receiverUserEmail;
+  final String receiverUserId;
 
   const ProductDetailsDesign({
     Key? key,
@@ -28,6 +29,8 @@ class ProductDetailsDesign extends StatefulWidget {
     required this.addToCart,
     required this.addingToCart,
 
+    required this.receiverUserEmail,
+    required this.receiverUserId,
   }) : super(key: key);
 
   @override
@@ -36,6 +39,29 @@ class ProductDetailsDesign extends StatefulWidget {
 
 class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
   int quantity = 1; // Default quantity
+
+
+  void _handleMessageButtonPress() {
+    // Implement the logic to navigate to the messaging or contact screen
+    // For example, you can use Navigator.push to navigate to a messaging page
+    // where the user can send a message regarding the product.
+
+    // Check if the receiverUserEmail and receiverUserId are not empty or null
+    if (widget.receiverUserEmail.isNotEmpty && widget.receiverUserId.isNotEmpty) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => MessageButton(
+            receiverUserEmail: widget.receiverUserEmail,
+            receiverUserId: widget.receiverUserId,
+          ),
+        ),
+      );
+    } else {
+      // Handle the case when receiverUserEmail or receiverUserId is empty
+      print("Cannot open chat. Missing user details.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -56,10 +82,13 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
         ),
         Text(
           widget.product.name,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.headline5!.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.green, // You can change the color as per your preference
+          ),
         ),
         Text(
-          "Posted by: ",
+          "Posted by: ${widget.product.postedByUser.email}",
           style: Theme.of(context).textTheme.subtitle1!.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -74,42 +103,7 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Quantity",
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () {
-                        if (quantity > 1) {
-                          setState(() {
-                            quantity--;
-                          });
-                        }
-                      },
-                    ),
-                    Text(
-                      "$quantity",
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        // You can set a maximum limit if needed
-                        setState(() {
-                          quantity++;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+
             RichText(
               text: TextSpan(
                 children: [
@@ -126,39 +120,88 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
             )
           ],
         ),
-        // ... other details
         Text(
-          "Description",
+          "Discription:",
           style: Theme.of(context)
               .textTheme
-              .subtitle1!
+              .titleMedium!
               .copyWith(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 5),
-        RichText(
-          text: TextSpan(
-            style: Theme.of(context).textTheme.bodyText1,
-            children: [
-              TextSpan(
-                text: widget.showMore
-                    ? widget.product.description
-                    : widget.product.description.length > 100
-                    ? '${widget.product.description.substring(0, widget.product.description.length - 100)}...'
-                    : widget.product.description,
-              ),
-              TextSpan(
-                recognizer: widget.readMoreGestureRecognizer,
-                text: widget.showMore ? " Read less" : " Read more",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
+        // ... other details
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[200], // Change the color as per your preference
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.all(10),
+          child: RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.bodyText1,
+              children: [
+                TextSpan(
+                  text: widget.showMore
+                      ? widget.product.description
+                      : widget.product.description.length > 100
+                      ? '${widget.product.description.substring(0, 100)}...'
+                      : widget.product.description,
                 ),
-              )
-            ],
+                if (widget.product.description.length > 100)
+                  TextSpan(
+                    recognizer: widget.readMoreGestureRecognizer,
+                    text: widget.showMore ? " Read less" : " Read more",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 20),
+        Row(
+          children: [
+            Text(
+              "Quantity: ",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+
+              child: Row(
+
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
+                      if (quantity > 1) {
+                        setState(() {
+                          quantity--;
+                        });
+                      }
+                    },
+                  ),
+                  Text(
+                    "$quantity",
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      // You can set a maximum limit if needed
+                      setState(() {
+                        quantity++;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         Text(
-          "Similar Products",
+          "Similar Products: ",
           style: Theme.of(context)
               .textTheme
               .titleMedium!
@@ -168,31 +211,46 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
         Container(
 
           // Adjust the height accordingly
-          height: 400,
+          height: 200,
           child: FutureBuilder<List<Product>>(
             future: ProductService().fetchSimilarProducts(widget.product),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return Container(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2.0),
+                );
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return Text('No similar products found.');
               } else {
                 List<Product> similarProducts = snapshot.data!;
-
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 8.0,
-                    mainAxisSpacing: 8.0,
-                  ),
+                return ListView.builder(
                   itemCount: similarProducts.length,
                   itemBuilder: (context, index) {
                     Product similarProduct = similarProducts[index];
 
-                    return SimilarProductCard(
-                      product: similarProduct,
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to the details page when a similar product is tapped
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailsPage(product: similarProduct),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(similarProduct.image),
+                        ),
+                        title: Text(similarProduct.name, style: TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text('Price: \₱${similarProduct.price.toStringAsFixed(2)}'),
+                        // Add more details or customize the UI as needed
+                      ),
                     );
                   },
                 );
@@ -202,6 +260,11 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
         ),
         const SizedBox(height: 20),
         // Display the MessageButton with the user who posted the product
+        // MessageButton widget with the handlePress callback
+        MessageButton(
+          receiverUserEmail: widget.receiverUserEmail,
+          receiverUserId: widget.receiverUserId,
+        ),
         const SizedBox(height: 20),
         FilledButton.icon(
           onPressed: widget.addingToCart ? null : () {
@@ -213,8 +276,13 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
               ? const CircularProgressIndicator()
               : const Text("Add to cart"),
         ),
+        const SizedBox(height: 20),
+
+
         // ...
+
       ],
     );
   }
+
 }

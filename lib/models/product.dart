@@ -1,6 +1,3 @@
-import 'package:agriplant/models/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Product {
   final String id;
   final String name;
@@ -8,7 +5,7 @@ class Product {
   final String image;
   final double price;
   final String unit;
-  final User? postedByUser;
+
 
   Product({
     required this.id,
@@ -17,7 +14,7 @@ class Product {
     required this.image,
     required this.price,
     required this.unit,
-    this.postedByUser,
+
   });
 
   factory Product.fromMap(Map<String, dynamic> map) {
@@ -28,9 +25,6 @@ class Product {
       image: map['image'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,
       unit: map['unit'] ?? '',
-      postedByUser: map['postedByUser'] != null
-          ? User.fromMap(map['postedByUser'])
-          : null,
     );
   }
 
@@ -42,7 +36,7 @@ class Product {
       'price': price,
       'image': image,
       'unit': unit,
-      'postedByUser': postedByUser != null ? postedByUser!.toMap() : null,
+
     };
   }
 }

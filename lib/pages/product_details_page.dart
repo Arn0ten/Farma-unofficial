@@ -1,9 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// product_details_page.dart
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../components/message_button.dart';
 import '../models/product.dart';
+import '../services/cart/cart_service.dart';
 import '../widgets/designs/product_details_design.dart';
+import 'cart_page.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   const ProductDetailsPage({
@@ -20,6 +22,15 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   late TapGestureRecognizer readMoreGestureRecognizer;
   bool showMore = false;
+  bool addingToCart = false; // Track whether the product is being added to the cart
+
+  void addToCart() {
+    // Add the product to the cart
+    CartService().addToCart(widget.product);
+
+    // Navigate to the cart page after adding the product
+
+  }
 
   @override
   void initState() {
@@ -54,15 +65,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         product: widget.product,
         showMore: showMore,
         readMoreGestureRecognizer: readMoreGestureRecognizer,
-        messageButton: MessageButton(
-          // Check if postedByUser is of type User before accessing its properties
-          receiverUserEmail: widget.product.postedByUser is User
-              ? (widget.product.postedByUser as User).email ?? 'Unknown Email'
-              : 'Unknown Email',
-          receiverUserId: widget.product.postedByUser is User
-              ? (widget.product.postedByUser as User).uid ?? 'Unknown UID'
-              : 'Unknown UID',
-        ),
+        addToCart: addToCart,
+        addingToCart: addingToCart,
       ),
     );
   }

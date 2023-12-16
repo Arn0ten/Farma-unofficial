@@ -101,8 +101,8 @@ class CartItem extends StatelessWidget {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
                           SizedBox(
                             height: 30,
@@ -113,7 +113,7 @@ class CartItem extends StatelessWidget {
                                 minWidth: 30,
                               ),
                               selectedColor:
-                                  Theme.of(context).colorScheme.primary,
+                              Theme.of(context).colorScheme.primary,
                               isSelected: const [
                                 true,
                                 false,
@@ -152,3 +152,4 @@ class CartItem extends StatelessWidget {
     );
   }
 }
+

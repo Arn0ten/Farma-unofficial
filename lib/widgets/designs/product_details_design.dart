@@ -1,27 +1,41 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 
 import '../../components/message_button.dart';
 import '../../models/product.dart';
 import '../../models/user.dart';
+import '../../pages/cart_page.dart';
 import '../../services/product/product_service.dart';
 import '../similar_products.dart';
 
-class ProductDetailsDesign extends StatelessWidget {
+class ProductDetailsDesign extends StatefulWidget {
   final Product product;
   final bool showMore;
   final TapGestureRecognizer readMoreGestureRecognizer;
-  final MessageButton messageButton;
+  final VoidCallback addToCart;
+  final bool addingToCart;
+
+
+
 
   const ProductDetailsDesign({
     Key? key,
     required this.product,
     required this.showMore,
     required this.readMoreGestureRecognizer,
-    required this.messageButton,
+    required this.addToCart,
+    required this.addingToCart,
+
   }) : super(key: key);
 
+  @override
+  State<ProductDetailsDesign> createState() => _ProductDetailsDesignState();
+}
+
+class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
+  int quantity = 1; // Default quantity
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -34,18 +48,18 @@ class ProductDetailsDesign extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(product.image),
+              image: NetworkImage(widget.product.image),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         Text(
-          product.name,
+          widget.product.name,
           style: Theme.of(context).textTheme.headline6,
         ),
         Text(
-          "Posted by: ${product.postedByUser?.displayName ?? 'Unknown User'}",
+          "Posted by: ",
           style: Theme.of(context).textTheme.subtitle1!.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -60,15 +74,51 @@ class ProductDetailsDesign extends StatelessWidget {
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Quantity",
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: () {
+                        if (quantity > 1) {
+                          setState(() {
+                            quantity--;
+                          });
+                        }
+                      },
+                    ),
+                    Text(
+                      "$quantity",
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        // You can set a maximum limit if needed
+                        setState(() {
+                          quantity++;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
             RichText(
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: "\₱${product.price}",
+                    text: "\₱${widget.product.price}",
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   TextSpan(
-                    text: "/${product.unit}",
+                    text: "/${widget.product.unit}",
                     style: Theme.of(context).textTheme.caption,
                   ),
                 ],
@@ -90,15 +140,15 @@ class ProductDetailsDesign extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyText1,
             children: [
               TextSpan(
-                text: showMore
-                    ? product.description
-                    : product.description.length > 100
-                    ? '${product.description.substring(0, product.description.length - 100)}...'
-                    : product.description,
+                text: widget.showMore
+                    ? widget.product.description
+                    : widget.product.description.length > 100
+                    ? '${widget.product.description.substring(0, widget.product.description.length - 100)}...'
+                    : widget.product.description,
               ),
               TextSpan(
-                recognizer: readMoreGestureRecognizer,
-                text: showMore ? " Read less" : " Read more",
+                recognizer: widget.readMoreGestureRecognizer,
+                text: widget.showMore ? " Read less" : " Read more",
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -120,7 +170,7 @@ class ProductDetailsDesign extends StatelessWidget {
           // Adjust the height accordingly
           height: 400,
           child: FutureBuilder<List<Product>>(
-            future: ProductService().fetchSimilarProducts(product),
+            future: ProductService().fetchSimilarProducts(widget.product),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
@@ -152,13 +202,18 @@ class ProductDetailsDesign extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         // Display the MessageButton with the user who posted the product
-        messageButton,
         const SizedBox(height: 20),
         FilledButton.icon(
-          onPressed: () {},
+          onPressed: widget.addingToCart ? null : () {
+            widget.addToCart();
+
+          },
           icon: const Icon(IconlyLight.bag2),
-          label: const Text("Add to cart"),
+          label: widget.addingToCart
+              ? const CircularProgressIndicator()
+              : const Text("Add to cart"),
         ),
+        // ...
       ],
     );
   }

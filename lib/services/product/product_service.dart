@@ -47,7 +47,7 @@ class ProductService {
           'postedByUser': {
             'uid': currentUser.uid,
             'email': currentUser.email,
-            'displayName': currentUser.displayName,
+            'fullName': currentUser.displayName, // Include the full name
           },
         });
       } else {

@@ -16,6 +16,12 @@ class CartService {
     print("Added to cart in CartService successfully");
   }
 
+  void removeFromCart(Product product) {
+    print("Removing from cart in CartService: ${product.name}");
+    cartItems.remove(product);
+    print("Removed from cart in CartService successfully");
+  }
+
   List<Product> getCartItems() {
     return List.from(cartItems);
   }

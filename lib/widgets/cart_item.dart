@@ -4,6 +4,8 @@ import 'package:agriplant/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 
+import '../services/cart/cart_service.dart';
+
 class CartItem extends StatelessWidget {
   const CartItem({Key? key, required this.cartItem}) : super(key: key);
 
@@ -28,31 +30,21 @@ class CartItem extends StatelessWidget {
         ),
       ),
       confirmDismiss: (DismissDirection direction) async {
-        final completer = Completer<bool>();
+        // Show a confirmation dialog if needed
+        return true;
+      },
+      onDismissed: (DismissDirection direction) {
+        // Remove the item from the cart here
+        CartService().removeFromCart(cartItem);
+
+        // Show a snackbar to indicate the item has been removed
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            duration: const Duration(seconds: 3),
-            action: SnackBarAction(
-              label: "Keep",
-              onPressed: () {
-                completer.complete(false);
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              },
-            ),
-            content: const Text(
-              "Remove from cart?",
-            ),
+            content: const Text('Item removed from cart'),
           ),
         );
-        Timer(const Duration(seconds: 3), () {
-          if (!completer.isCompleted) {
-            completer.complete(true);
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          }
-        });
-
-        return await completer.future;
       },
+
       child: SizedBox(
         height: 125,
         child: Card(

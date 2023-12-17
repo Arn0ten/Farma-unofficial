@@ -7,10 +7,12 @@ import '../models/product.dart';
 import '../pages/product_details_page.dart';
 
 class ProductCard extends StatefulWidget {
+
   const ProductCard({
     Key? key,
     required this.product,
-  }) : super(key: key);
+  }) : super(key: key
+  );
   final Product product;
 
   @override
@@ -126,18 +128,6 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: IconButton.filled(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-
-                            },
-                            iconSize: 18,
-                            icon: const Icon(Icons.add),
-                          ),
-                        )
                       ],
                     ),
                   ),

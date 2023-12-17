@@ -1,3 +1,4 @@
+import 'package:agriplant/pages/bookmark_page.dart';
 import 'package:agriplant/pages/checkout_page.dart';
 import 'package:agriplant/pages/orders_page.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,14 @@ class DrawerContent extends StatelessWidget {
           ListTile(
             title: const Text("Bookmarks"),
             leading: const Icon(IconlyLight.bookmark),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BookmarkPage(),
+                ),
+              );
+            },
           ),
           ListTile(
             title: const Text("About us"),

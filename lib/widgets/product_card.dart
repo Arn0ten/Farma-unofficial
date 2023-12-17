@@ -1,16 +1,16 @@
 // Import necessary packages
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import '../models/product.dart';
 import '../pages/product_details_page.dart';
 
 class ProductCard extends StatefulWidget {
-
-
   const ProductCard({
-
-    Key? key, required this.product}) : super(key: key);
-
+    Key? key,
+    required this.product,
+  }) : super(key: key);
   final Product product;
 
   @override
@@ -18,10 +18,15 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final CollectionReference _bookmarksCollection =
+  FirebaseFirestore.instance.collection('bookmarks');
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // Navigate to product details page
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ProductDetailsPage(product: widget.product),
@@ -52,11 +57,28 @@ class _ProductCardState extends State<ProductCard> {
               child: SizedBox(
                 width: 30,
                 height: 30,
-                child: IconButton.filledTonal(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {},
-                  iconSize: 18,
-                  icon: const Icon(IconlyLight.bookmark),
+                child: StreamBuilder(
+                  stream: _bookmarksCollection
+                      .where('productId', isEqualTo: widget.product.id)
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+
+                    bool isBookmarked = snapshot.hasData &&
+                        snapshot.data!.docs.isNotEmpty;
+
+                    return IconButton(
+                      onPressed: () {
+                        _toggleBookmark(isBookmarked);
+                      },
+                      iconSize: 18,
+                      icon: isBookmarked
+                          ? const Icon(IconlyBold.bookmark)
+                          : const Icon(IconlyLight.bookmark),
+                    );
+                  },
                 ),
               ),
             ),
@@ -142,4 +164,46 @@ class _ProductCardState extends State<ProductCard> {
       return AssetImage(relativePath);
     }
   }
+  void _toggleBookmark(bool isBookmarked) async {
+    User? currentUser = _auth.currentUser;
+
+    if (currentUser != null) {
+      if (isBookmarked) {
+        // Remove bookmark
+        await _bookmarksCollection
+            .where('productId', isEqualTo: widget.product.id)
+            .where('userId', isEqualTo: currentUser.uid)
+            .get()
+            .then((snapshot) {
+          for (DocumentSnapshot doc in snapshot.docs) {
+            doc.reference.delete();
+          }
+        });
+
+        // Show SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Product removed from bookmarks.'),
+          ),
+        );
+      } else {
+        // Add bookmark
+        await _bookmarksCollection.add({
+          'productId': widget.product.id,
+          'userId': currentUser.uid,
+        });
+
+        // Show SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Product added to bookmarks.'),
+          ),
+        );
+      }
+    } else {
+      // Handle the case when the user is not authenticated
+      print('User is not authenticated.');
+    }
+  }
+
 }

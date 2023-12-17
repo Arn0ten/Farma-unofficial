@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
 
     Timer(
-      Duration(seconds: 10),
+      Duration(seconds: 1),
           () {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(

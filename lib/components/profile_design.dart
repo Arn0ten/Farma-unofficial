@@ -1,5 +1,4 @@
 // designs/profile_design.dart
-
 import 'package:agriplant/components/circle_avatar_with_icon.dart';
 import 'package:agriplant/components/text_box.dart';
 import 'package:agriplant/pages/checkout_page.dart';

@@ -36,6 +36,13 @@ class BookmarkPage extends StatelessWidget {
           return CircularProgressIndicator();
         }
 
+        if (snapshot.hasError) {
+          // Handle error by displaying an error message to the user
+          return Center(
+            child: Text('Error fetching bookmarks: ${snapshot.error}'),
+          );
+        }
+
         List<String> bookmarkedProductIds = snapshot.data!.docs
             .map((doc) => doc['productId'] as String)
             .toList();

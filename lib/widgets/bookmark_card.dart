@@ -22,93 +22,106 @@ class BookmarkProductCard extends StatelessWidget {
 
         Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
 
-        return Card(
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(color: Colors.grey.shade200),
-          ),
-          elevation: 0.1,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 100,
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: _getImageProvider(data['image']),
-                    fit: BoxFit.cover,
+        return GestureDetector(
+          onTap: () {
+            // Navigate to the details page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductDetailsPage(product: Product.fromMap(data)),
+              ),
+            );
+          },
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: BorderSide(color: Colors.grey.shade200),
+            ),
+            elevation: 0.1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 100,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: _getImageProvider(data['image']),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        data['name'],
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          data['name'],
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width - 32,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: "₱${data['price']?.toStringAsFixed(2) ?? '0.00'}",
-                                      style: Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                    TextSpan(
-                                      text: "/",
-                                      style: Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                    TextSpan(
-                                      text: data['unit'] ?? '',
-                                      style: Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                  ],
+                      Container(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width - 32,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "₱${data['price']?.toStringAsFixed(2) ?? '0.00'}",
+                                        style: Theme.of(context).textTheme.bodyLarge,
+                                      ),
+                                      TextSpan(
+                                        text: "/",
+                                        style: Theme.of(context).textTheme.bodySmall,
+                                      ),
+                                      TextSpan(
+                                        text: data['unit'] ?? '',
+                                        style: Theme.of(context).textTheme.bodySmall,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            child: IconButton.filled(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                _removeBookmark(context, productId);
-                              },
-                              iconSize: 18,
-                              icon: const Icon(IconlyBold.closeSquare),
-                            ),
-                          )
-                        ],
+                            SizedBox(
+                              child: IconButton.filled(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  _removeBookmark(context, productId);
+                                },
+                                iconSize: 18,
+                                icon: const Icon(IconlyBold.closeSquare),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                    ],
+                  ),
+                )
+              ],
+            ),
+
           ),
         );
       },
     );
   }
+
 
   ImageProvider<Object> _getImageProvider(String imagePath) {
     if (imagePath.startsWith('http')) {

@@ -1,8 +1,8 @@
+import 'package:agriplant/pages/bookmark_page.dart';
 import 'package:agriplant/pages/cart_page.dart';
 import 'package:agriplant/pages/explore_page.dart';
 import 'package:agriplant/pages/product_post_page.dart';
 import 'package:agriplant/pages/profile_page.dart';
-import 'package:agriplant/pages/services_page.dart';
 import 'package:agriplant/widgets/drawer/drawer_content.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
   final pages = [
      ExplorePage(),
-    const ServicesPage(),
+    const BookmarkPage(),
     const CartPage(),
   ];
   int currentPageIndex = 0;
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final pages = [
        ExplorePage(),
-      const ServicesPage(),
+      const BookmarkPage(),
       const ProductPostPage(),
       const CartPage(),
       ProfilePage(userFullName: userFullName),
@@ -157,9 +157,9 @@ class _HomePageState extends State<HomePage> {
             activeIcon: Icon(IconlyBold.home),
           ),
           BottomNavigationBarItem(
-            icon: Icon(IconlyLight.call),
-            label: "Services",
-            activeIcon: Icon(IconlyBold.call),
+            icon: Icon(IconlyLight.bookmark),
+            label: "Bookmarks",
+            activeIcon: Icon(IconlyBold.bookmark),
           ),
           BottomNavigationBarItem(
             icon: Icon(IconlyLight.plus,

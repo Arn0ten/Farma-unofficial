@@ -59,7 +59,7 @@ class ExplorePageDesign {
               ],
             ),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 10),
           SizedBox(
             height: 170,
             child: Card(

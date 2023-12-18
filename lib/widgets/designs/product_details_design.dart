@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -97,7 +98,7 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Available in stock",
+              " ",
               style: Theme.of(context).textTheme.bodyText1!.copyWith(
                 color: Theme.of(context).colorScheme.primary,
               ),
@@ -282,4 +283,5 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
       ],
     );
   }
+
 }

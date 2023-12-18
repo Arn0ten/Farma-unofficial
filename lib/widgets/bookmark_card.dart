@@ -33,7 +33,7 @@ class BookmarkProductCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 30,
+                height: 100,
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
@@ -156,4 +156,5 @@ class BookmarkProductCard extends StatelessWidget {
       // Handle the error as needed
     }
   }
+
 }

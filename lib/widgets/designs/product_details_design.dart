@@ -8,6 +8,7 @@ import '../../models/product.dart';
 import '../../models/user.dart';
 import '../../pages/cart_page.dart';
 import '../../pages/product_details_page.dart';
+import '../../services/cart/cart_service.dart';
 import '../../services/product/product_service.dart';
 import '../similar_products.dart';
 
@@ -54,7 +55,17 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
       print("Cannot open chat. Missing user details.");
     }
   }
+  void _addToCart() {
+    // Pass the selected product and quantity to the CartService
+    CartService().addToCart(widget.product, quantity);
 
+    // Optionally, you can show a snackbar or perform other actions
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Added ${quantity}x ${widget.product.name} to the cart'),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -268,11 +279,7 @@ class _ProductDetailsDesignState extends State<ProductDetailsDesign> {
 
         // Add to Cart Button
         FilledButton.icon(
-          onPressed: widget.addingToCart
-              ? null
-              : () {
-            widget.addToCart();
-          },
+          onPressed: widget.addingToCart ? null : _addToCart,
           icon: const Icon(IconlyLight.bag2),
           label: widget.addingToCart
               ? const CircularProgressIndicator()

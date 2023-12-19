@@ -28,11 +28,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   bool showMore = false;
   bool addingToCart = false; // Track whether the product is being added to the cart
   bool isBookmarked = false; // Variable to track bookmark status
-
+  int quantity = 1;
 
   void addToCart() {
-    // Add the product to the cart
-    CartService().addToCart(widget.product);
+    // Add the product to the cart with the current quantity
+    CartService().addToCart(widget.product, quantity);
 
     // Set state to trigger UI changes
     setState(() {
@@ -51,9 +51,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             duration: Duration(seconds: 1),
           ),
         );
+        // Toggle the bookmark status after adding to the cart
+        toggleBookmark();
       });
     });
   }
+
   void toggleBookmark() {
     setState(() {
       isBookmarked = !isBookmarked;

@@ -54,10 +54,11 @@ class DrawerContent extends StatelessWidget {
             title: const Text("My checkouts"),
             leading: const Icon(IconlyLight.bag2),
             onTap: () {
+              // Assuming checkoutItems should be passed here
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CheckOutPage(),
+                  builder: (context) => CheckoutPage(checkoutItems: []),
                 ),
               );
             },

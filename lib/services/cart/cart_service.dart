@@ -17,7 +17,7 @@ class CartService {
   // Generate a unique cart ID based on the user's UID
   String get cartId => 'cart_${currentUserUid}';
 
-  void addToCart(Product product) {
+  void addToCart(Product product, int quantity) {
     print("Adding to cart in CartService: ${product.name}");
     // Set the cartId for the product
     product.cartId = cartId;
@@ -26,10 +26,10 @@ class CartService {
     int index = cartItems.indexWhere((item) => item.id == product.id);
     if (index != -1) {
       // If the product is already in the cart, increase the quantity
-      cartItems[index].quantity += 1;
+      cartItems[index].quantity += quantity;
     } else {
-      // If the product is not in the cart, add it with quantity 1
-      product.quantity = 1;
+      // If the product is not in the cart, add it with the specified quantity
+      product.quantity = quantity;
       cartItems.add(product);
     }
     print("Added to cart in CartService successfully");

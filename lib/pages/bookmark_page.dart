@@ -26,43 +26,45 @@ class BookmarkPage extends StatelessWidget {
       );
     }
 
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('bookmarks')
-          .where('userId', isEqualTo: currentUser.uid)
-          .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        }
+    return Center(
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('bookmarks')
+            .where('userId', isEqualTo: currentUser.uid)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
 
-        if (snapshot.hasError) {
-          // Handle error by displaying an error message to the user
-          return Center(
-            child: Text('Error fetching bookmarks: ${snapshot.error}'),
-          );
-        }
-
-        List<String> bookmarkedProductIds = snapshot.data!.docs
-            .map((doc) => doc['productId'] as String)
-            .toList();
-
-        if (bookmarkedProductIds.isEmpty) {
-          // No bookmarks found for the current user
-          return Center(
-            child: Text('You have no bookmarks.'),
-          );
-        }
-
-        return ListView.builder(
-          itemCount: bookmarkedProductIds.length,
-          itemBuilder: (context, index) {
-            return BookmarkProductCard(
-              productId: bookmarkedProductIds[index],
+          if (snapshot.hasError) {
+            // Handle error by displaying an error message to the user
+            return Center(
+              child: Text('Error fetching bookmarks: ${snapshot.error}'),
             );
-          },
-        );
-      },
+          }
+
+          List<String> bookmarkedProductIds = snapshot.data!.docs
+              .map((doc) => doc['productId'] as String)
+              .toList();
+
+          if (bookmarkedProductIds.isEmpty) {
+            // No bookmarks found for the current user
+            return Center(
+              child: Text('You have no bookmarks.'),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: bookmarkedProductIds.length,
+            itemBuilder: (context, index) {
+              return BookmarkProductCard(
+                productId: bookmarkedProductIds[index],
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

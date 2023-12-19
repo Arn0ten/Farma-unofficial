@@ -1,16 +1,18 @@
-import 'dart:async';
-import 'dart:math';
-import 'package:agriplant/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-
+import '../../models/product.dart';
 import '../services/cart/cart_service.dart';
 
-class CartItem extends StatelessWidget {
+class CartItem extends StatefulWidget {
   const CartItem({Key? key, required this.cartItem}) : super(key: key);
 
   final Product cartItem;
 
+  @override
+  State<CartItem> createState() => _CartItemState();
+}
+
+class _CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -35,7 +37,7 @@ class CartItem extends StatelessWidget {
       },
       onDismissed: (DismissDirection direction) {
         // Remove the item from the cart here
-        CartService().removeFromCart(cartItem);
+        CartService().removeFromCart(widget.cartItem);
 
         // Show a snackbar to indicate the item has been removed
         ScaffoldMessenger.of(context).showSnackBar(
@@ -44,7 +46,6 @@ class CartItem extends StatelessWidget {
           ),
         );
       },
-
       child: SizedBox(
         height: 125,
         child: Card(
@@ -66,7 +67,7 @@ class CartItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(cartItem.image),
+                      image: AssetImage(widget.cartItem.image),
                     ),
                   ),
                 ),
@@ -74,11 +75,11 @@ class CartItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(cartItem.name,
+                      Text(widget.cartItem.name,
                           style: Theme.of(context).textTheme.titleMedium),
                       const SizedBox(height: 2),
                       Text(
-                        cartItem.description,
+                        widget.cartItem.description,
                         style: Theme.of(context).textTheme.bodySmall,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -88,7 +89,7 @@ class CartItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "\₱${cartItem.price}",
+                            "\₱${widget.cartItem.price}",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
@@ -98,41 +99,32 @@ class CartItem extends StatelessWidget {
                           ),
                           SizedBox(
                             height: 30,
-                            child: ToggleButtons(
-                              borderRadius: BorderRadius.circular(99),
-                              constraints: const BoxConstraints(
-                                minHeight: 30,
-                                minWidth: 30,
-                              ),
-                              selectedColor:
-                              Theme.of(context).colorScheme.primary,
-                              isSelected: const [
-                                true,
-                                false,
-                                true,
-                              ],
+                            child: Row(
                               children: [
-                                const Icon(
-                                  Icons.remove,
-                                  size: 20,
+                                IconButton(
+                                  icon: const Icon(Icons.remove),
+                                  onPressed: () {
+                                    // Decrease quantity
+                                    setState(() {
+                                      CartService().decreaseQuantity(widget.cartItem);
+                                    });
+                                  },
                                 ),
-                                Text("${Random().nextInt(5) + 1}"),
-                                const Icon(
-                                  Icons.add,
-                                  size: 20,
+                                Text("${widget.cartItem.quantity}"),
+                                IconButton(
+                                  icon: const Icon(Icons.add),
+                                  onPressed: () {
+                                    // Increase quantity
+                                    setState(() {
+                                      CartService().increaseQuantity(widget.cartItem);
+                                    });
+                                  },
                                 ),
                               ],
-                              onPressed: (int index) {
-                                if (index == 0) {
-                                  // decrease quantity
-                                } else if (index == 2) {
-                                  // increase quantity
-                                }
-                              },
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 )
@@ -144,4 +136,3 @@ class CartItem extends StatelessWidget {
     );
   }
 }
-

@@ -18,12 +18,15 @@ class _CartPageState extends State<CartPage> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState ();
     ordersStream = OrderService().getOrdersStream();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Get cart items from CartService
+    final cartItems = CartService().getCartItems();
+
     return Scaffold(
       body: StreamBuilder<List<LocalOrder.Order>>(
         stream: ordersStream,
@@ -38,9 +41,6 @@ class _CartPageState extends State<CartPage> {
             );
           } else {
             final List<LocalOrder.Order> orders = snapshot.data ?? [];
-
-            // Get cart items from CartService
-            final cartItems = CartService().getCartItems();
 
             return ListView(
               physics: const BouncingScrollPhysics(),
@@ -80,20 +80,43 @@ class _CartPageState extends State<CartPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    ...cartItems.map(
-                          (product) => CartItem(cartItem: product),
-                    ),
+                    if (cartItems.isNotEmpty)
+                      ...cartItems.map(
+                            (product) => CartItem(cartItem: product),
+                      )
+                    else
+                      const Text(""),
                   ],
                 ),
                 const SizedBox(height: 15),
-                // Checkout Button
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle the checkout logic here
-                    // You can navigate to a checkout page or perform any other action
-                  },
-                  child: Text('Checkout'),
-                ),
+                // Checkout Button (conditionally displayed)
+                if (cartItems.isNotEmpty)
+                  ElevatedButton(
+                    onPressed: () async {
+                      // Get cart items from CartService
+                      final cartItems = CartService().getCartItems();
+
+                      // Place the order using the OrderService
+                      await OrderService().placeOrder(cartItems);
+                      // Rebuild the widget tree to reflect the updated cart
+                      setState(() {
+                        // Clear the cart after placing the order
+                        CartService().clearCart();
+                      });
+
+                      // Show a SnackBar to notify that checkout was successful
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Checkout successful!'),
+                        ),
+                      );
+                      // Optionally, you can navigate to a success page or perform any other action
+                    },
+                    child: Text('Checkout'),
+                  )
+                else
+
+                  Center(child: const Text('No items in the cart')),
               ],
             );
           }

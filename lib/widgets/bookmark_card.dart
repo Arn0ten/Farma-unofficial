@@ -1,9 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import '../models/product.dart';
-import '../services/product/product_service.dart';
 import '../pages/product_details_page.dart';
 
 class BookmarkProductCard extends StatelessWidget {
@@ -152,12 +152,18 @@ class BookmarkProductCard extends StatelessWidget {
           }
         });
 
-        // Show SnackBar
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Product removed from bookmarks.'),
-          ),
-        );
+        // Show AwesomeDialog with OK button
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES, // Use SUCCESS for a green check
+          animType: AnimType.SCALE,
+          title: 'Bookmark Removed',
+          desc: 'Product has been removed from bookmarks.',
+          btnOkText: 'OK', // Add the OK button
+          btnOkOnPress: () {
+            Navigator.of(context).pop(); // Close the dialog when OK is pressed
+          },
+        )..show();
 
         print('Bookmark removed successfully.');
       } else {
@@ -169,5 +175,6 @@ class BookmarkProductCard extends StatelessWidget {
       // Handle the error as needed
     }
   }
+
 
 }

@@ -82,8 +82,8 @@ class ExplorePageDesign {
                                 .textTheme
                                 .titleLarge!
                                 .copyWith(
-                                  color: Colors.green.shade700,
-                                ),
+                              color: Colors.green.shade700,
+                            ),
                           ),
                           const Text(
                               "Get free support from our customer service"),

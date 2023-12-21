@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/cart/cart_service.dart';
@@ -80,29 +81,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   Future<void> _confirmPlaceOrder() async {
-    // Show a confirmation dialog
-    bool confirm = await showDialog(
+    // Show a confirmation dialog using AwesomeDialog
+    AwesomeDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Order'),
-        content: const Text('Are you sure you want to place this order?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Confirm'),
-          ),
-        ],
-      ),
-    );
-
-    // If the user confirms, proceed with placing the order
-    if (confirm == true) {
-      await _placeOrder();
-    }
+      dialogType: DialogType.INFO,  // Use DialogType.INFO instead of DialogType.QUESTION
+      animType: AnimType.SCALE,
+      title: 'Confirm Order',
+      desc: 'Are you sure you want to place this order?',
+      btnCancelOnPress: () {},
+      btnOkOnPress: () async {
+        await _placeOrder();
+      },
+    )..show();
   }
 
   Future<void> _placeOrder() async {

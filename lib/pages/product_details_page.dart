@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import '../models/product.dart';
 import '../services/cart/cart_service.dart';
 import '../widgets/designs/product_details_design.dart';
-import 'cart_page.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   const ProductDetailsPage({
@@ -81,13 +81,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             }
           });
 
-          // Show SnackBar
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Product removed from bookmarks.'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          // Show AwesomeDialog
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.SUCCES,
+            animType: AnimType.SCALE,
+            title: 'Bookmark Removed',
+            desc: 'Product has been removed from bookmarks.',
+            btnOkText: 'OK', // Add the OK button
+            btnOkOnPress: () {}, // Add the action for the OK button
+          )..show();
         } else {
           // Add bookmark
           await _bookmarksCollection.add({
@@ -95,13 +98,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             'userId': currentUser.uid,
           });
 
-          // Show SnackBar
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Product added to bookmarks.'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          // Show AwesomeDialog
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.SUCCES,
+            animType: AnimType.SCALE,
+            title: 'Bookmark Added',
+            desc: 'Product has been added to bookmarks.',
+            btnOkText: 'OK', // Add the OK button
+            btnOkOnPress: () {}, // Add the action for the OK button
+          )..show();
         }
       } catch (error) {
         print('Error toggling bookmark: $error');

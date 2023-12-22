@@ -9,6 +9,7 @@ class BookmarkPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: UniqueKey(), // Set a unique key for Scaffold
       appBar: AppBar(
         title: Text('Bookmarks'),
       ),
@@ -28,6 +29,7 @@ class BookmarkPage extends StatelessWidget {
 
     return Center(
       child: StreamBuilder(
+        key: UniqueKey(), // Set a unique key for StreamBuilder
         stream: FirebaseFirestore.instance
             .collection('bookmarks')
             .where('userId', isEqualTo: currentUser.uid)
@@ -56,6 +58,7 @@ class BookmarkPage extends StatelessWidget {
           }
 
           return ListView.builder(
+            key: UniqueKey(), // Set a unique key for ListView.builder
             itemCount: bookmarkedProductIds.length,
             itemBuilder: (context, index) {
               return BookmarkProductCard(

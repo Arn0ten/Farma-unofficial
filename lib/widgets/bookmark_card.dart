@@ -152,18 +152,19 @@ class BookmarkProductCard extends StatelessWidget {
           }
         });
 
-        // Show AwesomeDialog with OK button
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.SUCCES, // Use SUCCESS for a green check
-          animType: AnimType.SCALE,
-          title: 'Bookmark Removed',
-          desc: 'Product has been removed from bookmarks.',
-          btnOkText: 'OK', // Add the OK button
-          btnOkOnPress: () {
-            Navigator.of(context).pop(); // Close the dialog when OK is pressed
-          },
-        )..show();
+        // Show SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Product removed from bookmarks'),
+            duration: Duration(seconds: 2), // Adjust the duration as needed
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {
+                // Action to be performed when OK is pressed
+              },
+            ),
+          ),
+        );
 
         print('Bookmark removed successfully.');
       } else {

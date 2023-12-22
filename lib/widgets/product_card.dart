@@ -1,19 +1,16 @@
-// Import necessary packages
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import '../models/product.dart';
 import '../pages/product_details_page.dart';
 
 class ProductCard extends StatefulWidget {
-
   const ProductCard({
     Key? key,
     required this.product,
-  }) : super(key: key
-  );
+  }) : super(key: key);
+
   final Product product;
 
   @override
@@ -24,8 +21,37 @@ class _ProductCardState extends State<ProductCard> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _bookmarksCollection =
   FirebaseFirestore.instance.collection('bookmarks');
-  bool isBookmarked = false; // Variable to track bookmark status
+  late bool isBookmarked; // Variable to track bookmark status
 
+  @override
+  void initState() {
+    super.initState();
+    // Initialize isBookmarked based on the stored bookmark status
+    initBookmarkStatus();
+  }
+
+  Future<void> initBookmarkStatus() async {
+    User? currentUser = _auth.currentUser;
+
+    if (currentUser != null) {
+      try {
+        // Check if the current product is bookmarked by the user
+        var snapshot = await _bookmarksCollection
+            .where('productId', isEqualTo: widget.product.id)
+            .where('userId', isEqualTo: currentUser.uid)
+            .get();
+
+        setState(() {
+          isBookmarked = snapshot.docs.isNotEmpty;
+        });
+      } catch (error) {
+        print('Error initializing bookmark status: $error');
+      }
+    } else {
+      // Handle the case when the user is not authenticated
+      print('User is not authenticated.');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -37,105 +63,71 @@ class _ProductCardState extends State<ProductCard> {
           ),
         );
       },
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          side: BorderSide(color: Colors.grey.shade200),
-        ),
-        elevation: 0.1,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 92,
-              alignment: Alignment.topRight,
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: _getImageProvider(widget.product.image),
-                  fit: BoxFit.cover,
+      child: Container(
+        height: 250, // Set an appropriate height for your card
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: Colors.grey.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                  child: Image.network(
+                    widget.product.image,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              child: SizedBox(
-                width: 30,
-                height: 30,
-                child:
-                // Inside ProductCard build method
-                StreamBuilder(
-                  stream: _bookmarksCollection
-                      .where('productId', isEqualTo: widget.product.id)
-                      .where('userId', isEqualTo: _auth.currentUser?.uid)
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    bool isBookmarked = snapshot.hasData && snapshot.data!.docs.isNotEmpty;
-
-                    return IconButton(
-                      onPressed: () {
-                        toggleBookmark();
-                      },
-                      iconSize: 18,
-                      icon: isBookmarked
-                          ? const Icon(IconlyBold.bookmark)
-                          : const Icon(IconlyLight.bookmark),
-                    );
-                  },
-                ),
-
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       widget.product.name,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      maxLines: 2, // Limit the number of lines for the product name
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  Container(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width - 32,
-                    ),
-                    child: Row(
+                    const SizedBox(height: 4),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Flexible(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: "₱${widget.product.price.toStringAsFixed(2)}", // Format as a string with 2 decimal places
-                                    style: Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                  TextSpan(
-                                    text: "/",
-                                    style: Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                  TextSpan(
-                                    text: widget.product.unit,
-                                    style: Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                ],
-                              ),
+                        Expanded(
+                          child: Text(
+                            '₱${widget.product.price.toStringAsFixed(2)} / ${widget.product.unit}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
+                        IconButton(
+                          onPressed: () {
+                            toggleBookmark();
+                          },
+                          iconSize: 18,
+                          icon: isBookmarked
+                              ? const Icon(IconlyBold.bookmark)
+                              : const Icon(IconlyLight.bookmark),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -180,16 +172,17 @@ class _ProductCardState extends State<ProductCard> {
             }
           });
 
-          // Show AwesomeDialog
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.SUCCES,
-            animType: AnimType.SCALE,
-            title: 'Bookmark Removed',
-            desc: 'Product has been removed from bookmarks.',
-            btnOkText: 'OK', // Add the OK button
-            btnOkOnPress: () {}, // Add the action for the OK button
-          )..show();
+          // Show SnackBar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Bookmark Removed'),
+              duration: Duration(seconds: 2), // Adjust the duration as needed
+              action: SnackBarAction(
+                label: 'OK',
+                onPressed: () {},
+              ),
+            ),
+          );
         } else {
           // Add bookmark
           await _bookmarksCollection.add({
@@ -197,16 +190,17 @@ class _ProductCardState extends State<ProductCard> {
             'userId': currentUser.uid,
           });
 
-          // Show AwesomeDialog
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.SUCCES,
-            animType: AnimType.SCALE,
-            title: 'Bookmark Added',
-            desc: 'Product has been added to bookmarks.',
-            btnOkText: 'OK', // Add the OK button
-            btnOkOnPress: () {}, // Add the action for the OK button
-          )..show();
+          // Show SnackBar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Bookmark Added'),
+              duration: Duration(seconds: 2), // Adjust the duration as needed
+              action: SnackBarAction(
+                label: 'OK',
+                onPressed: () {},
+              ),
+            ),
+          );
         }
       } catch (error) {
         print('Error toggling bookmark: $error');

@@ -1,3 +1,4 @@
+
 // designs/profile_design.dart
 import 'package:agriplant/components/circle_avatar_with_icon.dart';
 import 'package:agriplant/components/text_box.dart';
@@ -134,37 +135,36 @@ class ProfileDesign {
 }
 
 
-   Widget _buildDetailCard(String title, String value, IconData iconData) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        leading: Icon(
-          iconData,
-          color: Colors.green,
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: Text(value),
+Widget _buildDetailCard(String title, String value, IconData iconData) {
+  return Card(
+    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    child: ListTile(
+      leading: Icon(
+        iconData,
+        color: Colors.green,
       ),
-    );
-  }
-   Widget _buildProductCard(Product product) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        title: Text(
-          product.name,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
         ),
-        subtitle: Text('Price: \₱${product.price.toString()}'),
-        // Add other details you want to display
       ),
-    );
-  }
-
+      subtitle: Text(value),
+    ),
+  );
+}
+Widget _buildProductCard(Product product) {
+  return Card(
+    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    child: ListTile(
+      title: Text(
+        product.name,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text('Price: \₱${product.price.toString()}'),
+      // Add other details you want to display
+    ),
+  );
+}

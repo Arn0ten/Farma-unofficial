@@ -80,4 +80,5 @@ class CartService {
     // Clear the cart associated with the current user
     cartItems.removeWhere((item) => item.cartId == cartId);
   }
+
 }

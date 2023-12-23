@@ -57,8 +57,13 @@ class BookmarkPage extends StatelessWidget {
             );
           }
 
-          return ListView.builder(
-            key: UniqueKey(), // Set a unique key for ListView.builder
+          return GridView.builder(
+            key: UniqueKey(), // Set a unique key for GridView.builder
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // Set the number of columns in the grid
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+            ),
             itemCount: bookmarkedProductIds.length,
             itemBuilder: (context, index) {
               return BookmarkProductCard(
@@ -70,4 +75,5 @@ class BookmarkPage extends StatelessWidget {
       ),
     );
   }
+
 }

@@ -134,7 +134,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
       body: ProductDetailsDesign(
         product: widget.product,
         showMore: showMore,

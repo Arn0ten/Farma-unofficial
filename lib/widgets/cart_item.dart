@@ -51,7 +51,7 @@ class _CartItemState extends State<CartItem> {
         child: Card(
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            borderRadius: BorderRadius.circular(10),
             side: BorderSide(color: Colors.grey.shade200),
           ),
           elevation: 0.1,
@@ -60,7 +60,7 @@ class _CartItemState extends State<CartItem> {
             child: Row(
               children: [
                 Container(
-                  height: double.infinity,
+                  height: 100,
                   width: 90,
                   margin: const EdgeInsets.only(right: 15),
                   decoration: BoxDecoration(
@@ -75,9 +75,15 @@ class _CartItemState extends State<CartItem> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.cartItem.name,
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 2),
+                      Text(
+                        widget.cartItem.name,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
                       Text(
                         widget.cartItem.description,
                         style: Theme.of(context).textTheme.bodySmall,

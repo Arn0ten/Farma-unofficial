@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
   final pages = [
      ExplorePage(),
      BookmarkPage(),
-    const CartPage(),
+     CartPage(),
   ];
   int currentPageIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -68,8 +68,8 @@ class _HomePageState extends State<HomePage> {
     final pages = [
        ExplorePage(),
        BookmarkPage(),
-      const ProductPostPage(),
-      const CartPage(),
+       ProductPostPage(),
+       CartPage(),
       ProfilePage(userFullName: userFullName),
       // Pass userFullName to ProfilePage
     ];

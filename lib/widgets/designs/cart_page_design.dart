@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import '../../models/order.dart'as LocalOrder;
+import '../../models/order.dart' as LocalOrder;
 import '../../models/product.dart';
 import '../../pages/checkout_page.dart';
 import '../../services/cart/cart_service.dart';
 import '../../services/order/order_service.dart';
 import '../cart_item.dart';
 import '../order_item.dart';
-// Import your local Order class and use an alias
 
 class CartPageDesign {
   final Stream<List<LocalOrder.Order>> ordersStream;
@@ -36,7 +35,7 @@ class CartPageDesign {
 
                   return ListView(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.only(top: 16, bottom: 60), // Adjust bottom padding
+                    padding: const EdgeInsets.only(top: 16, bottom: 60),
                     children: [
                       _buildHistoricalOrders(orders),
                       _buildCurrentCart(cartItems),
@@ -46,8 +45,6 @@ class CartPageDesign {
               },
             ),
           ),
-
-          // Positioned widget to place Checkout button at the bottom
           Positioned(
             bottom: 0,
             left: 0,
@@ -58,7 +55,6 @@ class CartPageDesign {
       ),
     );
   }
-
 
   Widget _buildHistoricalOrders(List<LocalOrder.Order> orders) {
     if (orders.isNotEmpty) {
@@ -109,8 +105,6 @@ class CartPageDesign {
     );
   }
 
-
-
   Widget _buildCheckoutButton(List<Product> cartItems, BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -140,7 +134,6 @@ class CartPageDesign {
 
   Future<void> _confirmCheckout(BuildContext context) async {
     if (cartItems.isNotEmpty) {
-      // Show a confirmation dialog using AwesomeDialog
       AwesomeDialog(
         context: context,
         dialogType: DialogType.INFO,
@@ -156,10 +149,8 @@ class CartPageDesign {
   }
 
   Future<void> _handleCheckout(List<Product> cartItems, BuildContext context) async {
-    // Place the order using the OrderService (if needed)
     await OrderService().placeOrder(cartItems);
 
-    // Show an AwesomeDialog to notify that checkout was successful
     AwesomeDialog(
       context: context,
       dialogType: DialogType.SUCCES,
@@ -167,20 +158,13 @@ class CartPageDesign {
       title: 'Checkout Successful',
       desc: 'Your order has been placed successfully!',
       btnOkOnPress: () {
-        // Navigate to the CheckoutPage with the actual cart items
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => CheckoutPage(checkoutItems: cartItems),
           ),
         );
-
-        // Rebuild the widget tree to reflect the updated cart
-
-          // Optionally, you can clear the cart after placing the order
-          CartService().clearCart();
-
+        CartService().clearCart();
       },
     )..show();
   }
-
 }

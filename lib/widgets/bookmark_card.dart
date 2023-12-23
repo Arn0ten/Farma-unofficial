@@ -1,6 +1,5 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import '../models/product.dart';
@@ -18,8 +17,6 @@ class BookmarkProductCard extends StatelessWidget {
           ? FirebaseFirestore.instance.collection('products').doc(productId).get()
           : null, // Return null if productId is empty
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-
         if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
           return Text('');
         }
@@ -65,7 +62,10 @@ class BookmarkProductCard extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
                           data['name'],
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -85,15 +85,25 @@ class BookmarkProductCard extends StatelessWidget {
                                     children: [
                                       TextSpan(
                                         text: "₱${data['price']?.toStringAsFixed(2) ?? '0.00'}",
-                                        style: Theme.of(context).textTheme.bodyLarge,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       TextSpan(
                                         text: "/",
-                                        style: Theme.of(context).textTheme.bodySmall,
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                       TextSpan(
                                         text: data['unit'] ?? '',
-                                        style: Theme.of(context).textTheme.bodySmall,
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -101,7 +111,7 @@ class BookmarkProductCard extends StatelessWidget {
                               ),
                             ),
                             SizedBox(
-                              child: IconButton.filled(
+                              child: IconButton(
                                 padding: EdgeInsets.zero,
                                 onPressed: () {
                                   _removeBookmark(context, productId);
@@ -118,13 +128,11 @@ class BookmarkProductCard extends StatelessWidget {
                 )
               ],
             ),
-
           ),
         );
       },
     );
   }
-
 
   ImageProvider<Object> _getImageProvider(String imagePath) {
     if (imagePath.startsWith('http')) {
@@ -179,6 +187,4 @@ class BookmarkProductCard extends StatelessWidget {
       // Handle the error as needed
     }
   }
-
-
 }

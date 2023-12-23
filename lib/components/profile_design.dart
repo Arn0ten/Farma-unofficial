@@ -1,15 +1,12 @@
-
-// designs/profile_design.dart
-import 'package:agriplant/components/circle_avatar_with_icon.dart';
-import 'package:agriplant/components/text_box.dart';
-import 'package:agriplant/pages/checkout_page.dart';
-import 'package:agriplant/pages/orders_page.dart';
-import 'package:agriplant/services/auth/auth_gate.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import '../models/product.dart';
+import '../components/circle_avatar_with_icon.dart';
+import '../components/text_box.dart';
+import '../pages/checkout_page.dart';
+import '../pages/orders_page.dart';
+import '../services/auth/auth_gate.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 
 class ProfileDesign {
   static Widget buildProfilePage({
@@ -68,10 +65,18 @@ class ProfileDesign {
                 stream: userProducts,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return Column(
-                      children: snapshot.data!.map((product) {
-                        return _buildProductCard(product);
-                      }).toList(),
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                      ),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return _buildProductCard(snapshot.data![index]);
+                      },
                     );
                   } else if (snapshot.hasError) {
                     return Center(
@@ -131,40 +136,56 @@ class ProfileDesign {
     );
   }
 
-// _buildDetailCard and _buildProductCard methods remain the same
-}
-
-
-Widget _buildDetailCard(String title, String value, IconData iconData) {
-  return Card(
-    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-    child: ListTile(
-      leading: Icon(
-        iconData,
-        color: Colors.green,
+  static Widget _buildDetailCard(String title, String value, IconData iconData) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ListTile(
+        leading: Icon(
+          iconData,
+          color: Colors.green,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(value),
       ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
+    );
+  }
+
+  static Widget _buildProductCard(Product product) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ListTile(
+        title: Text(
+          product.name,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                product.image,
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Text('Error loading image');
+                },
+              ),
+            ),
+            Text('Price: \₱${product.price.toString()}'),
+            // Add other details you want to display
+          ],
         ),
       ),
-      subtitle: Text(value),
-    ),
-  );
-}
-Widget _buildProductCard(Product product) {
-  return Card(
-    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-    child: ListTile(
-      title: Text(
-        product.name,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text('Price: \₱${product.price.toString()}'),
-      // Add other details you want to display
-    ),
-  );
+    );
+  }
+
 }

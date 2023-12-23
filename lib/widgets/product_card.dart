@@ -21,7 +21,7 @@ class _ProductCardState extends State<ProductCard> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _bookmarksCollection =
   FirebaseFirestore.instance.collection('bookmarks');
-  late bool isBookmarked; // Variable to track bookmark status
+  late bool isBookmarked = false; // Initialize with false
 
   @override
   void initState() {

@@ -158,7 +158,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               .where('userId', isEqualTo: _auth.currentUser?.uid)
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            bool isBookmarked = snapshot.hasData && snapshot.data!.docs.isNotEmpty;
+            bool isBookmarked =
+                snapshot.hasData && snapshot.data!.docs.isNotEmpty;
 
             return IconButton(
               onPressed: () {

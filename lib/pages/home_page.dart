@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
   final pages = [
      ExplorePage(),
-    const BookmarkPage(),
+     BookmarkPage(),
     const CartPage(),
   ];
   int currentPageIndex = 0;
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final pages = [
        ExplorePage(),
-      const BookmarkPage(),
+       BookmarkPage(),
       const ProductPostPage(),
       const CartPage(),
       ProfilePage(userFullName: userFullName),

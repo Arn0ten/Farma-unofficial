@@ -14,12 +14,15 @@ class BookmarkProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('products').doc(productId).get(),
+      future: productId.isNotEmpty
+          ? FirebaseFirestore.instance.collection('products').doc(productId).get()
+          : null, // Return null if productId is empty
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
-          return Text('Product not found');
-        }
 
+
+        if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
+          return Text('');
+        }
         Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
 
         return GestureDetector(

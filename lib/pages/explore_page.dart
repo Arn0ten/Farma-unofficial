@@ -1,3 +1,4 @@
+// explore_page.dart
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/product/product_service.dart';
@@ -10,7 +11,6 @@ class ExplorePage extends StatefulWidget {
   _ExplorePageState createState() => _ExplorePageState();
 }
 
-// _ExplorePageState in explore_page.dart
 class _ExplorePageState extends State<ExplorePage> {
   final TextEditingController _searchController = TextEditingController();
   Stream<List<Product>>? searchResultsStream;
@@ -18,7 +18,6 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   void initState() {
     super.initState();
-    // Fetch products stream when the page is initialized
     searchResultsStream = ProductService().getProductsStream();
   }
 

@@ -1,7 +1,9 @@
+// explore_page_design.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:agriplant/widgets/product_card.dart';
+
 import '../../models/product.dart';
+
 
 class ExplorePageDesign {
   static Widget buildExplorePage(
@@ -43,66 +45,15 @@ class ExplorePageDesign {
                       prefixIcon: const Icon(Icons.search),
                     ),
                     onChanged: (value) {
-                      // searchUsers(value);
+                      searchProducts(value, context);
                     },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12),
-                  child: IconButton(
-                    onPressed: () {
-                      // Add any filter functionality here
-                    },
-                    icon: const Icon(Icons.filter),
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 10),
-          SizedBox(
-            height: 170,
-            child: Card(
-              color: Colors.green.shade50,
-              elevation: 0.1,
-              shadowColor: Colors.green.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Free consultation",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                              color: Colors.green.shade700,
-                            ),
-                          ),
-                          const Text(
-                              "Get free support from our customer service"),
-                          FilledButton(
-                            onPressed: () {},
-                            child: const Text("Call now"),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Image.asset(
-                      'assets/contact_us.png',
-                      width: 140,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // Featured Products
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -116,8 +67,8 @@ class ExplorePageDesign {
               ),
             ],
           ),
+          // GridView for Featured Products
           GridView.builder(
-
             itemCount: searchResults.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -131,6 +82,7 @@ class ExplorePageDesign {
               return ProductCard(product: searchResults[index]);
             },
           ),
+          // StreamBuilder for Search Results
           if (searchResultsStream != null)
             StreamBuilder<List<Product>>(
               stream: searchResultsStream,
@@ -149,7 +101,6 @@ class ExplorePageDesign {
                   );
                 } else if (snapshot.hasData) {
                   return GridView.builder(
-
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -158,7 +109,6 @@ class ExplorePageDesign {
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
                     ),
-
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return ProductCard(product: snapshot.data![index]);
@@ -169,30 +119,14 @@ class ExplorePageDesign {
                 }
               },
             ),
-          // ... (rest of the ExplorePage code)
         ],
       ),
     );
   }
 
-  // Define a method to get the title based on data type
-  static String _getItemTitle(dynamic data) {
-    if (data is Product) {
-      return data.name;
-    } else if (data is Map<String, dynamic>) {
-      return data['fullName'];
-    } else {
-      return '';
-    }
-  }
-
-  // Define a method to handle item tap based on data type
-  static void _handleItemTap(dynamic data) {
-    if (data is Product) {
-      // Handle product tap
-    } else if (data is Map<String, dynamic>) {
-      // Handle map tap
-    }
-    // Add additional cases as needed
+  static void searchProducts(String query, BuildContext context) {
+    // Perform the search based on the query
+    // You can use the ProductService to fetch search results
+    // Update the searchResults list or stream accordingly
   }
 }

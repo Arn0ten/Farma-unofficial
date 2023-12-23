@@ -31,13 +31,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   int quantity = 1;
 
   void addToCart() {
-    // Add the product to the cart with the current quantity
-    CartService().addToCart(widget.product, quantity);
-
-    // Set state to trigger UI changes
+    // Set state to trigger UI changes and show loading indicator
     setState(() {
       addingToCart = true;
     });
+
+    // Add the product to the cart with the current quantity
+    CartService().addToCart(widget.product, quantity);
 
     // Simulate a delay to show the loading indicator
     Future.delayed(const Duration(seconds: 2), () {
@@ -56,6 +56,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       });
     });
   }
+
 
   void toggleBookmark() {
     setState(() {

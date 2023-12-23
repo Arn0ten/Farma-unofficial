@@ -161,7 +161,7 @@ class ProfileDesign {
       child: ListTile(
         title: Text(
           product.name,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),

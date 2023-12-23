@@ -1,7 +1,6 @@
 // explore_page_design.dart
 import 'package:flutter/material.dart';
 import 'package:agriplant/widgets/product_card.dart';
-
 import '../../models/product.dart';
 
 

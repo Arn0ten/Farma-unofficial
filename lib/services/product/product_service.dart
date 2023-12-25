@@ -1,3 +1,4 @@
+// product_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:agriplant/models/product.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +7,7 @@ import 'dart:io';
 
 class ProductService {
   final CollectionReference _productsCollection =
-  FirebaseFirestore.instance.collection('products');
+      FirebaseFirestore.instance.collection('products');
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<List<Product>> getProducts() async {
@@ -34,33 +35,52 @@ class ProductService {
     }
   }
 
-
-  // Update the addProduct method in ProductService
   Future<void> addProduct(Product product) async {
     try {
-      // Get the current user from Firebase Authentication
       User? currentUser = FirebaseAuth.instance.currentUser;
 
       if (currentUser != null) {
-        // Use the product name as the document ID
-        await _productsCollection.doc(product.name).set({
-          'name': product.name,
-          'description': product.description,
-          'image': product.image,
-          'price': product.price,
-          'unit': product.unit,
-          'postedByUser': {
-            'uid': currentUser.uid,
-            'email': currentUser.email,
-            'fullName': currentUser.displayName,
-          },
-        });
+        // Check if a product with the same name already exists
+        bool productExists = await doesProductExist(product.name);
+
+        if (productExists) {
+          // Handle the case where a product with the same name already exists
+          print('Product with the same name already exists.');
+        } else {
+          // Add the product if it doesn't exist
+          await _productsCollection.doc(product.name).set({
+            'name': product.name,
+            'description': product.description,
+            'image': product.image,
+            'price': product.price,
+            'unit': product.unit,
+            'postedByUser': {
+              'uid': currentUser.uid,
+              'email': currentUser.email,
+              'fullName': currentUser.displayName,
+            },
+          });
+        }
       } else {
-        // Handle the case when the user is not authenticated
         print('User is not authenticated.');
       }
     } catch (e) {
       print('Error adding product: $e');
+      throw e;
+    }
+  }
+
+  Future<bool> doesProductExist(String productName) async {
+    try {
+      QuerySnapshot<Object?> snapshot = await _productsCollection
+          .where('name', isEqualTo: productName.toLowerCase())
+          .limit(
+              1) // Limit the query to check existence only, not to retrieve all results
+          .get();
+
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      print('Error checking product existence: $e');
       throw e;
     }
   }
@@ -82,9 +102,10 @@ class ProductService {
       }).toList();
     });
   }
+
   Future<List<Product>> fetchProducts() async {
     final QuerySnapshot<Map<String, dynamic>> snapshot =
-    await FirebaseFirestore.instance.collection('products').get();
+        await FirebaseFirestore.instance.collection('products').get();
     return snapshot.docs.map((doc) {
       return Product.fromMap({
         'id': doc.id,
@@ -99,15 +120,13 @@ class ProductService {
 
   Future<List<Product>> fetchSimilarProducts(Product product) async {
     try {
-      QuerySnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance
+      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+          .instance
           .collection('products')
           .where('unit', isEqualTo: product.unit)
           .get();
-
       return snapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
         return Product(
           id: doc.id,
           name: data['name'],
@@ -126,32 +145,27 @@ class ProductService {
 
   Future<String> uploadImage(File imageFile) async {
     try {
-      // Generate a unique ID for the image
-      String imageId = DateTime.now() .millisecondsSinceEpoch.toString();
+      String imageId = DateTime.now().millisecondsSinceEpoch.toString();
 
-      // Create a reference for the image using a specific path (e.g., 'product_images/imageId.jpg')
-      Reference storageReference = _storage.ref().child('product_images/$imageId.jpg');
+      Reference storageReference =
+          _storage.ref().child('product_images/$imageId.jpg');
 
-      // Upload the image to Firebase Storage
       UploadTask uploadTask = storageReference.putFile(imageFile);
 
-      // Get the task snapshot to track the upload progress
       TaskSnapshot taskSnapshot = await uploadTask;
 
-      // Check if the upload is complete
       if (taskSnapshot.state == TaskState.success) {
-        // Image upload successful, get the download URL
         String downloadUrl = await storageReference.getDownloadURL();
         return downloadUrl;
       } else {
-        // Image upload failed, throw an error
         throw ('Image upload failed');
       }
     } catch (e) {
       print('Error uploading image: $e');
-      throw e; // Re-throw the exception for the caller to handle
+      throw e;
     }
   }
+
   Stream<List<Product>> getUserProducts(String userId) {
     try {
       return _productsCollection
@@ -177,5 +191,32 @@ class ProductService {
       throw e;
     }
   }
-// Add other methods as needed, e.g., updateProduct, deleteProduct, etc.
+
+  // New method to search products based on a query
+  // product_service.dart
+  Future<List<Product>> searchProducts(String query) async {
+    try {
+      QuerySnapshot<Object?> snapshot = await _productsCollection
+          .where('name', isEqualTo: query.toLowerCase())
+          .limit(1) // Limit to one result since names are unique
+          .get();
+
+      return snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        return Product(
+          id: doc.id,
+          name: data['name'],
+          price: data['price'].toDouble(),
+          unit: data['unit'],
+          description: data['description'],
+          image: data['image'],
+          postedByUser: PostedByUser.fromMap(data['postedByUser']),
+        );
+      }).toList();
+    } catch (e) {
+      print('Error searching products: $e');
+      throw e;
+    }
+  }
 }

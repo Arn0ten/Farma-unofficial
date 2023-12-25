@@ -166,7 +166,7 @@ class BookmarkProductCard extends StatelessWidget {
         // Show SnackBar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Product removed from bookmarks'),
+            content: Text('Bookmark Removed'),
             duration: Duration(seconds: 2), // Adjust the duration as needed
             action: SnackBarAction(
               label: 'OK',
